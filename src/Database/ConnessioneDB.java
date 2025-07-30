@@ -5,21 +5,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 
-public class ConnectionDB {
+public class ConnessioneDB {
     //Connessione
-    private static ConnectionDB conDB = null;
+    private static ConnessioneDB conDB = null;
     //Connessione ad SQL
     private Connection conn_SQL = null;
 
 
     // costruttore della connessione
-    public ConnectionDB() {
+    private ConnessioneDB() {
     }
 
     //Proviamo l'ottenimento della connessione (metodo)
-    public static ConnectionDB getConnectionDB() {
+    protected static ConnessioneDB getConnectionDB() {
         if (conDB == null) {
-            conDB = new ConnectionDB();
+            conDB = new ConnessioneDB();
         }
 
         //e la restituisce

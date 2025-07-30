@@ -1,17 +1,18 @@
 package Controller;
 
-import Database.ConnectionDB;
+import Database.ComunicazioneDB;
 
 public class Controller {
 
     // Database
-    private ConnectionDB connessioneDatabase;
+    private ComunicazioneDB comunicaDatabase;
     public static void main(String[] args) {
         System.out.println("Sono il controller");
         Controller c = new Controller();
     }
 
     public Controller(){
-        connessioneDatabase = new ConnectionDB();
+        // apro la comunicazione con il database
+        comunicaDatabase = new ComunicazioneDB();
     }
 }
