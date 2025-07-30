@@ -22,7 +22,7 @@ public class Chef {
 
     //metodi della classe Chef
 
-    
+
 
 }
 
