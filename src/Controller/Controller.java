@@ -8,7 +8,7 @@ public class Controller {
 		System.out.println("Ciao sono il controller");
 		FinestraLogin frame = new FinestraLogin();
 		frame.setVisible(true);
-
+		System.out.println("Ciao sono Ale");
 
 	}
 
