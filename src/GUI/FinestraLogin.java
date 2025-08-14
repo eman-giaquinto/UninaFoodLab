@@ -5,15 +5,15 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class FinestraLogin extends JFrame {
+public class FinestraLogin extends FinestraTemplate {
 
 	private JPanel contentPane;
 
 
-	/**
-	 * Create the frame.
-	 */
 	public FinestraLogin() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -21,6 +21,16 @@ public class FinestraLogin extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JButton btnNewButton = new JButton("New button");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				messaggioInfoPopUp("Bottone cliccato");
+			}
+		});
+		btnNewButton.setBounds(114, 109, 89, 23);
+		contentPane.add(btnNewButton);
 	}
-
 }

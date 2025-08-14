@@ -9,7 +9,6 @@ public class Controller {
 		FinestraLogin frame = new FinestraLogin();
 		frame.setVisible(true);
 		System.out.println("Ciao sono Ema");
-
 	}
 
 }
