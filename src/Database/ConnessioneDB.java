@@ -40,7 +40,7 @@ public class ConnessioneDB {
 	            Class.forName("org.postgresql.Driver");
 	                
 	            /* Leggo dal file e ricavo url,user, e password del Database*/
-				buffer = new BufferedReader(new FileReader(new File("src/ConfigurationDB/configDB.txt")));
+				buffer = new BufferedReader(new FileReader(new File("src/configurationDB/configDB.txt")));
 		                
 				urlDB = buffer.readLine();
 		        userDB = buffer.readLine();

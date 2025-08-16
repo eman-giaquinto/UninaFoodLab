@@ -17,15 +17,15 @@ public class FinestraTemplate extends JFrame {
     protected final Font FONT_BOTTONE = new Font("SansSerif", Font.BOLD, 13);
     
 	// Metodi
-    protected void messaggioInfoPopUp(String testo) {
+    public void messaggioInfoPopUp(String testo) {
     	JOptionPane.showMessageDialog(this,testo,"Info",JOptionPane.INFORMATION_MESSAGE);
 	}
     
-    protected void messaggioWarningPopUp(String testo) {
+    public void messaggioWarningPopUp(String testo) {
     	JOptionPane.showMessageDialog(this,testo,"Attenzione",JOptionPane.WARNING_MESSAGE);
 	}
     
-    protected void messaggioErrorPopUp(String testo) {
+    public void messaggioErrorPopUp(String testo) {
     	JOptionPane.showMessageDialog(this,testo,"Errore",JOptionPane.ERROR_MESSAGE);
 	}
     

@@ -4,6 +4,9 @@ package GUI;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Controller.Controller;
+
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -12,11 +15,15 @@ import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
 public class FinestraLogin extends FinestraTemplate {
+	
+	private Controller controller;
 
 	private JPanel contentPane;
 
 
-	public FinestraLogin() {
+	public FinestraLogin(Controller c) {
+		controller = c;
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 703, 478);
 		contentPane = new JPanel();
