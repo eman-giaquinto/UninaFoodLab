@@ -44,7 +44,7 @@ public class ComunicazioneDB {
     	return connessioneSQL;
     }
     
-    public ResultSet ccomunicazioneDBQuery(String comando) throws DBExceptionRisultatoIndefinito {
+    public ResultSet comunicazioneDBQuery(String comando) throws DBExceptionRisultatoIndefinito {
 		/* Invio della query al DB con i dovuti controlli*/
 		try { 
 			risultato = statement.executeQuery(comando);
