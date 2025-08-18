@@ -1,9 +1,9 @@
 package DatabaseException;
 
 public class DBExceptionUsernameNonTrovato extends Exception{
-	private String messaggioWarningSchermo = "Username non trovato";
+	private String messaggioErrorSchermo = "Username non trovato";
 
-	public String getmessaggioWarningSchermo() {
-		return messaggioWarningSchermo;
+	public String getmessaggioErrorSchermo() {
+		return messaggioErrorSchermo;
 	}
 }

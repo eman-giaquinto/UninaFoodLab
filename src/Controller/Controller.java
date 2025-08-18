@@ -1,5 +1,7 @@
 package Controller;
 
+import javax.swing.JFrame;
+
 import DAO.ChefDAO;
 import DTO.Chef;
 import Database.ComunicazioneDB;
@@ -9,6 +11,7 @@ import DatabaseException.DBExceptionPasswordErrata;
 import DatabaseException.DBExceptionRisultatoIndefinito;
 import DatabaseException.DBExceptionUsernameNonTrovato;
 import GUI.FinestraLogin;
+import GUI.FinestraMenuPrincipale;
 import ImplementazioniDAO.ImplementazioneChefDAO;
 
 public class Controller {
@@ -17,6 +20,7 @@ public class Controller {
 	
 	// Finestre
 	private FinestraLogin finestraLogin;
+	private FinestraMenuPrincipale finestraMenuPrincipale;
 	
 	//DAO
 	private ChefDAO chefDAO;
@@ -33,7 +37,8 @@ public class Controller {
 		
 		// Inizializzo le finestre
 		finestraLogin = new FinestraLogin(this);
-		
+		finestraMenuPrincipale = new FinestraMenuPrincipale(this);
+
 		finestraLogin.setVisible(true);
 		
 		// Apro la comunicazione con il database
@@ -54,9 +59,22 @@ public class Controller {
 	}
 	
 	public void accesso(String username, String password) throws DBExceptionRisultatoIndefinito,
-	DBExceptionUsernameNonTrovato, DBExceptionPasswordErrata {
+					DBExceptionUsernameNonTrovato, DBExceptionPasswordErrata {
 		
-	chefLoggato = chefDAO.verificaAccesso(username, password);
-	
+		// Richiamo il metodo per provare l' accesso con i dati inseriti
+		chefLoggato = chefDAO.verificaAccesso(username, password);
+		
+		/* Inizializzazione schermata principale*/
+		String nomecognomeChef = chefLoggato.getPresentazione();
+		
+		finestraMenuPrincipale.impostaChef(nomecognomeChef);
+		
+		gotoMenuPrincipale(finestraLogin);
 	}
+	
+	public void gotoMenuPrincipale(JFrame finestra) {
+		finestraMenuPrincipale.setVisible(true);
+		finestra.setVisible(false);
+	}
+	
 }

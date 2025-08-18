@@ -2,21 +2,35 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class FinestraTemplate extends JFrame {
 
+	/* Attributi */
+	
     // Colori
-    protected final Color COLORE_SFONDO = new Color(245, 238, 223);
-    protected final Color COLORE_PRINCIPALE = new Color(3, 49, 86);
-    protected final Color COLORE_PRINCIPALE_SCURO = new Color(23, 65, 94);
+    Color COLORE_SFONDO = new Color(245, 238, 223);
+    Color COLORE_PRINCIPALE = new Color(3, 49, 86);
+    Color COLORE_SECONDARIO = new Color(23, 65, 94);
+    Color COLORE_BOTTONE_CHIARO = new Color(30, 129, 176);
     
     // Font
-    protected final Font FONT_BOTTONE = new Font("SansSerif", Font.BOLD, 13);
+    Font FONT_BOTTONE = new Font("SansSerif", Font.BOLD, 13);
+    // font font_casella_username_and_password = new font new Font("Tahoma", Font.PLAIN, 20) | da vedere se implemetare o meno
     
-	// Metodi
+    // Logo
+    ImageIcon logoIcon = new ImageIcon(FinestraTemplate.class.getResource("/img/logo_ritagliato.jpg"));
+    Image logoImage = logoIcon.getImage();
+    Image scaledLogo = logoImage.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+    ImageIcon logoVisualizzato = new ImageIcon(scaledLogo);
+    
+	/* Metodi */
+    
+    // Messaggi a schermo
     public void messaggioInfoPopUp(String testo) {
     	JOptionPane.showMessageDialog(this,testo,"Info",JOptionPane.INFORMATION_MESSAGE);
 	}
@@ -29,6 +43,33 @@ public class FinestraTemplate extends JFrame {
     	JOptionPane.showMessageDialog(this,testo,"Errore",JOptionPane.ERROR_MESSAGE);
 	}
     
-	public FinestraTemplate() {}
-
+    // Logo
+    protected ImageIcon getLogoVisualizzato() {
+        return logoVisualizzato;
+    }
+    
+    // Colori
+    protected Color getColoreSfondo() {
+    	return COLORE_SFONDO;
+    }
+    
+    protected Color getColorePrincipale() {
+    	return COLORE_PRINCIPALE;
+    }
+    
+    protected Color getColoreSecondario() {
+    	return COLORE_SECONDARIO;
+    }
+    
+    protected Color getColoreBottoneChiaro() {
+    	return COLORE_BOTTONE_CHIARO;
+    }
+    
+    // Font
+    protected Font getFonteBottone() {
+    	return FONT_BOTTONE;
+    }
+       
+    
+	public FinestraTemplate() {	}
 }
