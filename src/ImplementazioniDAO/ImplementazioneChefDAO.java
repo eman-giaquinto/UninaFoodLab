@@ -47,7 +47,7 @@ public class ImplementazioneChefDAO implements ChefDAO {
 			throw new DBExceptionRisultatoIndefinito();
 		}
 		
-		if(!passwordChefDB.equals(passwordChefDB)) {
+		if(!password.equals(passwordChefDB)) {
 			throw new DBExceptionPasswordErrata();
 		}
 				
@@ -55,21 +55,21 @@ public class ImplementazioneChefDAO implements ChefDAO {
 
 	@Override
 	public void recuperoDati() throws DBExceptionRisultatoIndefinito {
-		String nome;
-		String cognome;
-		String descrizione;
+		String nomeChef;
+		String cognomeChef;
+		String descrizioneChef;
 		
 		try {
-			nome = risultato.getString("nome");
-			cognome = risultato.getString("cognome");
-			descrizione = risultato.getString("descrizione");
+			nomeChef = risultato.getString("nome");
+			cognomeChef = risultato.getString("cognome");
+			descrizioneChef = risultato.getString("descrizione");
 		} catch (SQLException e) {
 			throw new DBExceptionRisultatoIndefinito();
 		}
 		
-		chefAutenticato.setNome(nome);
-		chefAutenticato.setCognome(cognome);
-		chefAutenticato.setDescrizione(descrizione);
+		chefAutenticato.setNome(nomeChef);
+		chefAutenticato.setCognome(cognomeChef);
+		chefAutenticato.setDescrizione(descrizioneChef);
 		
 	}
 

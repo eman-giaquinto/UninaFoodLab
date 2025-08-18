@@ -56,7 +56,9 @@ public class Chef {
 		this.descrizione = descrizione;
 	}
 	
-	
+	public String getPresentazione() {
+		return getNome() + " " + getCognome();
+	}
 	
 
 }
