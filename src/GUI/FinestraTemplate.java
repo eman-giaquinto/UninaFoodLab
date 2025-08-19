@@ -20,12 +20,14 @@ public class FinestraTemplate extends JFrame {
     
     // Font
     Font FONT_BOTTONE = new Font("SansSerif", Font.BOLD, 13);
+	Font FONT_BOTTONE_MENU = new Font("Tahoma", Font.BOLD, 19);
+
     // font font_casella_username_and_password = new font new Font("Tahoma", Font.PLAIN, 20) | da vedere se implemetare o meno
     
     // Logo
     ImageIcon logoIcon = new ImageIcon(FinestraTemplate.class.getResource("/img/logo_ritagliato.jpg"));
     Image logoImage = logoIcon.getImage();
-    Image scaledLogo = logoImage.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+    Image scaledLogo = logoImage.getScaledInstance(175, 175, Image.SCALE_SMOOTH);
     ImageIcon logoVisualizzato = new ImageIcon(scaledLogo);
     
 	/* Metodi */
@@ -65,10 +67,15 @@ public class FinestraTemplate extends JFrame {
     	return COLORE_BOTTONE_CHIARO;
     }
     
-    // Font
-    protected Font getFonteBottone() {
+    // Font    
+    protected Font getFontBottone() {
     	return FONT_BOTTONE;
     }
+    
+    protected Font getFontBottoneMenu() {
+    	return FONT_BOTTONE_MENU;
+    }
+      
        
     
 	public FinestraTemplate() {	}

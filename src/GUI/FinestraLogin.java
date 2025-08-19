@@ -64,7 +64,7 @@ public class FinestraLogin extends FinestraTemplate {
 		JLabel lblLogo = new JLabel("");
 		lblLogo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLogo.setIcon(getLogoVisualizzato());
-		lblLogo.setBounds(200, 0, 200, 200);
+		lblLogo.setBounds(194, 9, 200, 200);
 		panel.add(lblLogo);
 		
 		JLabel lblUser = new JLabel("");
