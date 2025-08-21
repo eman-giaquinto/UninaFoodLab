@@ -129,7 +129,8 @@ public class FinestraMenuPrincipale extends FinestraTemplate {
 		btnVisualizza.addMouseListener(new MouseAdapter() {
 		    @Override
 		    public void mouseClicked(MouseEvent e) {
-		        // Inserire qui la logica per visualizzare un corso con le relative sessioni ecc...
+		        // Inserire qui la logica per visualizzare un corso con le relative sessioni ecc..
+		    	controller.showFinestraVisualizzaCorsi();
 		    }
 		    @Override
 		    public void mouseEntered(MouseEvent e) {
@@ -207,10 +208,8 @@ public class FinestraMenuPrincipale extends FinestraTemplate {
 		btnReportMensile.setBounds(372, 468, 180, 50);
 		panel.add(btnReportMensile);
 		
-		Component verticalStrut_1_1 = Box.createVerticalStrut(20);
-		verticalStrut_1_1.setBounds(760, 11, 24, 561);
-		panel.add(verticalStrut_1_1);
-		
+		// Per centrare la finestra ogni volta al centro dello schermo
+		setLocationRelativeTo(null);
 		
 	}
 

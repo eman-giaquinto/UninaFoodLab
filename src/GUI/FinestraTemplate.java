@@ -6,7 +6,9 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class FinestraTemplate extends JFrame {
 
@@ -21,6 +23,8 @@ public class FinestraTemplate extends JFrame {
     // Font
     Font FONT_BOTTONE = new Font("SansSerif", Font.BOLD, 13);
 	Font FONT_BOTTONE_MENU = new Font("Tahoma", Font.BOLD, 19);
+    Font FONT_HEADER = new Font("SansSerif", Font.BOLD, 15); 
+    Font FONT_CELLE = new Font("SansSerif", Font.PLAIN, 15);
 
     // font font_casella_username_and_password = new font new Font("Tahoma", Font.PLAIN, 20) | da vedere se implemetare o meno
     
@@ -29,6 +33,9 @@ public class FinestraTemplate extends JFrame {
     Image logoImage = logoIcon.getImage();
     Image scaledLogo = logoImage.getScaledInstance(175, 175, Image.SCALE_SMOOTH);
     ImageIcon logoVisualizzato = new ImageIcon(scaledLogo);
+    
+    // Utilità
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
     
 	/* Metodi */
     
@@ -74,9 +81,22 @@ public class FinestraTemplate extends JFrame {
     
     protected Font getFontBottoneMenu() {
     	return FONT_BOTTONE_MENU;
-    }
-      
-       
+    }  
     
-	public FinestraTemplate() {	}
+	protected Font getFontHeader() {
+		return FONT_HEADER;
+	}
+
+	protected Font getFontCelle() {
+		return FONT_CELLE;
+	}
+
+	// Utilità
+	protected DefaultTableCellRenderer getcenterRenderer() {
+		return centerRenderer;
+	}
+	
+	public FinestraTemplate() {
+	    centerRenderer.setHorizontalAlignment( JLabel.CENTER );	
+	}
 }
