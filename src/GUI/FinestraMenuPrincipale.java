@@ -1,6 +1,8 @@
 package GUI;
 
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -21,8 +23,6 @@ import java.awt.Component;
 import java.awt.Cursor;
 
 import javax.swing.Box;
-import java.awt.Dimension;
-import javax.swing.JTable;
 import javax.swing.JSeparator;
 import javax.swing.JButton;
 
@@ -39,7 +39,7 @@ public class FinestraMenuPrincipale extends FinestraTemplate {
 		setResizable(false);
 		controller = c;
 
-		setIconImage(Toolkit.getDefaultToolkit().getImage(FinestraLogin.class.getResource("/img/logo_ritagliato.jpg")));		
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FinestraMenuPrincipale.class.getResource("/img/logo_ritagliato.jpg")));		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 950, 600);
 		
@@ -61,33 +61,10 @@ public class FinestraMenuPrincipale extends FinestraTemplate {
 	    Image scaledLogo = logoImage.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
 	    lblNomeCognomeChef.setIcon(new ImageIcon(scaledLogo));
 	    
-		ImageIcon logoIconClicked = new ImageIcon(FinestraTemplate.class.getResource("/img/user-square-clicked.png"));
-	    Image logoImageClicked = logoIconClicked.getImage();
-	    Image scaledLogoClicked = logoImageClicked.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-
-	    // Da vedere come gestire l' effetto hover quando si passa con il mouse sopra
-	    
-	    lblNomeCognomeChef.addMouseListener(new MouseAdapter() {
-	        @Override
-	        public void mouseEntered(MouseEvent e) {
-	    	    lblNomeCognomeChef.setIcon(new ImageIcon(scaledLogoClicked));
-	        }
-
-	        @Override
-	        public void mouseExited(MouseEvent e) {
-	    	    lblNomeCognomeChef.setIcon(new ImageIcon(scaledLogo));
-	        }
-	        
-	        @Override
-	        public void mouseClicked(MouseEvent e) {
-	            System.out.println("Click!");
-	        }
-	    });
-	    
 	    lblNomeCognomeChef.setHorizontalTextPosition(SwingConstants.CENTER);
 	    lblNomeCognomeChef.setVerticalTextPosition(SwingConstants.BOTTOM);   
 
-		lblNomeCognomeChef.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNomeCognomeChef.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblNomeCognomeChef.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNomeCognomeChef.setBounds(647, 75, 250, 90);
 		
@@ -120,18 +97,19 @@ public class FinestraMenuPrincipale extends FinestraTemplate {
 		JLabel lblTitolo = new JLabel("Menu Principale");
 		lblTitolo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitolo.setForeground(getColorePrincipale());
-		lblTitolo.setFont(new Font("Verdana", Font.BOLD | Font.ITALIC, 20));
+		lblTitolo.setFont(getFontTitoloPrincipale());
 		lblTitolo.setBounds(334, 197, 256, 26);
 		panel.add(lblTitolo);
 		
 		JButton btnVisualizza = new JButton("Visualizza");
 		
-		btnVisualizza.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		        // Inserire qui la logica per visualizzare un corso con le relative sessioni ecc..
+		btnVisualizza.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
 		    	controller.showFinestraVisualizzaCorsi();
-		    }
+        	}
+        });   
+		
+		btnVisualizza.addMouseListener(new MouseAdapter() {
 		    @Override
 		    public void mouseEntered(MouseEvent e) {
 		    	btnVisualizza.setBackground(getColoreBottoneChiaro()); 	
@@ -154,11 +132,13 @@ public class FinestraMenuPrincipale extends FinestraTemplate {
 		
 		JButton btnAggiungi = new JButton("Aggiungi");
 		
-		btnAggiungi.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
+		btnAggiungi.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
 		        // Inserire qui la logica per aggiungere un corso
-		    }
+        	}
+        }); 
+		
+		btnAggiungi.addMouseListener(new MouseAdapter() {
 		    @Override
 		    public void mouseEntered(MouseEvent e) {
 		    	btnAggiungi.setBackground(getColoreBottoneChiaro()); 	
@@ -182,11 +162,13 @@ public class FinestraMenuPrincipale extends FinestraTemplate {
 		
 		JButton btnReportMensile = new JButton("Report Mensile");
 		
-		btnReportMensile.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
+		btnAggiungi.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
 		        // Inserire qui la logica per visualizzare il report mensile
-		    }
+        	}
+        }); 
+		
+		btnReportMensile.addMouseListener(new MouseAdapter() {
 		    @Override
 		    public void mouseEntered(MouseEvent e) {
 		    	btnReportMensile.setBackground(getColoreBottoneChiaro()); 	

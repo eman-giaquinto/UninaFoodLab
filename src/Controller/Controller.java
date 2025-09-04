@@ -7,20 +7,26 @@ import javax.swing.JFrame;
 
 import DAO.ChefDAO;
 import DAO.CorsoDAO;
+import DAO.SessionePraticaDAO;
 import DTO.Chef;
 import DTO.Corso;
+import DTO.SessionePratica;
 import Database.ComunicazioneDB;
 import DatabaseException.DBExceptionConnessioneNonRiuscita;
 import DatabaseException.DBExceptionCorsiNonTrovati;
 import DatabaseException.DBExceptionCreazioneStatementFallita;
 import DatabaseException.DBExceptionPasswordErrata;
 import DatabaseException.DBExceptionRisultatoIndefinito;
+import DatabaseException.DBExceptionSessioniPraticheNonTrovate;
 import DatabaseException.DBExceptionUsernameNonTrovato;
 import GUI.FinestraLogin;
 import GUI.FinestraMenuPrincipale;
+import GUI.FinestraSceltaTipoDiSessione;
 import GUI.FinestraVisualizzaCorsi;
+import GUI.FinestraVisualizzaSessioniPratiche;
 import ImplementazioniDAO.ImplementazioneChefDAO;
 import ImplementazioniDAO.ImplementazioneCorsoDAO;
+import ImplementazioniDAO.ImplementazioneSessionePraticaDAO;
 
 public class Controller {
 	// Database
@@ -30,11 +36,15 @@ public class Controller {
 	private FinestraLogin finestraLogin;
 	private FinestraMenuPrincipale finestraMenuPrincipale;
 	private FinestraVisualizzaCorsi finestraVisualizzaCorsi;
+	private FinestraSceltaTipoDiSessione finestraSceltaTipoDiSessione;
+	private FinestraVisualizzaSessioniPratiche finestraVisualizzaSessioniPratiche;
 
 	
 	//DAO
 	private ChefDAO chefDAO;
     private CorsoDAO corsoDAO;
+    private SessionePraticaDAO sessionePraticaDAO;
+
 
 	
 	//DTO
@@ -42,6 +52,14 @@ public class Controller {
 	
 	//Oggetti
     private ArrayList<Corso> corsiVisualizzati;
+    private DateTimeFormatter formatoDataItaliana = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private int idCorsoSelezionato;
+    private ArrayList<SessionePratica> sessioniPraticheVisualizzate;
+    private DateTimeFormatter formatoOraItaliana = DateTimeFormatter.ofPattern("HH:mm");
+
+
+
+
 
 	
 
@@ -55,6 +73,8 @@ public class Controller {
 		finestraLogin = new FinestraLogin(this);
 		finestraMenuPrincipale = new FinestraMenuPrincipale(this);
 		finestraVisualizzaCorsi = new FinestraVisualizzaCorsi(this);
+		finestraSceltaTipoDiSessione = new FinestraSceltaTipoDiSessione(this);
+		finestraVisualizzaSessioniPratiche = new FinestraVisualizzaSessioniPratiche(this);
 
 		finestraLogin.setVisible(true);
 		
@@ -73,6 +93,7 @@ public class Controller {
 		// Inizializzo i DAO
 		chefDAO = new ImplementazioneChefDAO(comunicazioneDB);
     	corsoDAO = new ImplementazioneCorsoDAO(comunicazioneDB); 
+        sessionePraticaDAO = new ImplementazioneSessionePraticaDAO(comunicazioneDB);
 
 
 	}
@@ -101,24 +122,24 @@ public class Controller {
 	/* VISUALIZZA CORSI */
 	
 	public void showFinestraVisualizzaCorsi() {
-		finestraVisualizzaCorsi.setFiltri();
+		finestraVisualizzaCorsi.setFiltriTipiDiCorso();
 		finestraVisualizzaCorsi.setVisible(true);
 		finestraMenuPrincipale.setVisible(false);
 		finestraVisualizzaCorsi.richiestaVisualizzaCorsi("Tutti");
-		
 	}
 	
-	public void richiestaConfermataVisualizzaCorsi(String filtroScelto) throws DBExceptionRisultatoIndefinito, DBExceptionCorsiNonTrovati{
+	public void richiestaConfermataVisualizzaCorsi(String filtroScelto) throws DBExceptionRisultatoIndefinito,
+					DBExceptionCorsiNonTrovati{
+		
 		String usernameChef = chefLoggato.getUsername();
 		corsiVisualizzati = corsoDAO.ottieniCorsi(usernameChef,filtroScelto);
+		// Se non vengono rilanciate eccezioni allora procedo a stampare a schermo i corsi ricavati
 		stampaTabellaCorsi();
 	}
 	
 	private void stampaTabellaCorsi() {
 		finestraVisualizzaCorsi.svuotaTabella();
-		
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-	    
+			    
 		int numeroCorso=1;
 		
 		// Per ogni corso aggiungo una tupla alla tabella dei corsi visualizzati a schermo 
@@ -127,17 +148,72 @@ public class Controller {
 					corso.getIdCorso(),
 	                numeroCorso++,
 	                corso.getTipoDiCorso().getDescrizione(), 
-	                corso.getDataInizio().format(formatter), 
+	                corso.getDataInizio().format(formatoDataItaliana), 
 	                corso.getFrequenzaSessione().getDescrizione(), 
-	                corso.getDataFine().format(formatter)
+	                corso.getDataFine().format(formatoDataItaliana)
 	            );
 		}
 	}
 	
 	public String[] impostaDescrizioniTipiDiCorso() {
+		//Imposta l'elenco dei tipi di corsi per filtrare i corsi
 		String[] tipiDiCorso = Corso.ottieniDescrizioniTipiDiCorso();
 	    return tipiDiCorso;
 	}
+	
+	/* VISUALIZZA SCELTA TIPO DI SESSIONE */
+	
+	public void richiestaMostraSessioniCorsoSelezionato(int idCorsoRichiesto) {
+		idCorsoSelezionato=idCorsoRichiesto;
+	}
+	
+	public void showFinestraSceltaTipoDiSessione() {
+		finestraSceltaTipoDiSessione.setVisible(true);
+	}
+	
+	/* VISUALIZZA SESSIONI PRATICHE  */
+
+	public void backToCorsiVisualizzati(JFrame finestra) {
+		finestraVisualizzaCorsi.setVisible(true);
+		finestra.setVisible(false);
+	}
+	
+	public void showFinestraVisualizzaSessioniPratiche() {
+		finestraVisualizzaSessioniPratiche.setVisible(true);
+		finestraVisualizzaCorsi.setVisible(false);
+		finestraSceltaTipoDiSessione.setVisible(false);
+		finestraVisualizzaSessioniPratiche.richiestaVisualizzaSessioniPratiche();
+	}
+	
+	public void richiestaConfermataVisualizzaSessioniPratiche() throws DBExceptionRisultatoIndefinito, 
+					DBExceptionSessioniPraticheNonTrovate{
+		
+		sessioniPraticheVisualizzate = sessionePraticaDAO.ottieniSessioniPratiche(idCorsoSelezionato);
+		// Se non vengono rilanciate eccezioni allora procedo a stampare a schermo le sessioni pratiche ricavate
+		stampaTabellaSessioniPratiche();
+	}
+	
+	private void stampaTabellaSessioniPratiche() {
+		finestraVisualizzaSessioniPratiche.svuotaTabella();
+	    
+		int numeroSessionePratica=1;
+		// Per ogni sessione pratica aggiungo una tupla alla tabella visualizzata a schermo 
+		for (SessionePratica sessionepratica : sessioniPraticheVisualizzate) {
+			finestraVisualizzaSessioniPratiche.aggiungiTupla(
+					sessionepratica.getIdSessionePratica(),
+					numeroSessionePratica++,
+	                sessionepratica.getNumeroAdesioni(),
+	                sessionepratica.getDataSessione().format(formatoDataItaliana),
+	                sessionepratica.getOrarioInizio().toLocalTime().format(formatoOraItaliana),
+	                sessionepratica.getOrarioFine().toLocalTime().format(formatoOraItaliana),
+					sessionepratica.getFkCorso()
+	            );
+		}
+	}
+	
+	/* VISUALIZZA RICETTE DELLE SESSIONI PRATICHE */
+	
+	
 	
 	
 }

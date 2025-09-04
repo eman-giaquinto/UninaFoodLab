@@ -15,27 +15,29 @@ public class FinestraTemplate extends JFrame {
 	/* Attributi */
 	
     // Colori
-    Color COLORE_SFONDO = new Color(245, 238, 223);
-    Color COLORE_PRINCIPALE = new Color(3, 49, 86);
-    Color COLORE_SECONDARIO = new Color(23, 65, 94);
-    Color COLORE_BOTTONE_CHIARO = new Color(30, 129, 176);
+    private final static Color COLORE_SFONDO = new Color(245, 238, 223);
+    private final static Color COLORE_PRINCIPALE = new Color(3, 49, 86);
+    private final static Color COLORE_SECONDARIO = new Color(23, 65, 94);
+    private final static Color COLORE_BOTTONE_CHIARO = new Color(30, 129, 176);
     
     // Font
-    Font FONT_BOTTONE = new Font("SansSerif", Font.BOLD, 13);
-	Font FONT_BOTTONE_MENU = new Font("Tahoma", Font.BOLD, 19);
-    Font FONT_HEADER = new Font("SansSerif", Font.BOLD, 15); 
-    Font FONT_CELLE = new Font("SansSerif", Font.PLAIN, 15);
+    private final static Font FONT_BOTTONE = new Font("SansSerif", Font.BOLD, 13);
+    private final static Font FONT_BOTTONE_MENU = new Font("Tahoma", Font.BOLD, 19);
+    private final static Font FONT_HEADER = new Font("SansSerif", Font.BOLD, 15); 
+    private final static Font FONT_CELLE = new Font("SansSerif", Font.PLAIN, 15);
+    private final static Font FONT_TITOLO_PRINCIPALE = new Font("Verdana", Font.BOLD | Font.ITALIC, 20);
+
 
     // font font_casella_username_and_password = new font new Font("Tahoma", Font.PLAIN, 20) | da vedere se implemetare o meno
     
     // Logo
-    ImageIcon logoIcon = new ImageIcon(FinestraTemplate.class.getResource("/img/logo_ritagliato.jpg"));
-    Image logoImage = logoIcon.getImage();
-    Image scaledLogo = logoImage.getScaledInstance(175, 175, Image.SCALE_SMOOTH);
-    ImageIcon logoVisualizzato = new ImageIcon(scaledLogo);
+    private ImageIcon logoIcon = new ImageIcon(FinestraTemplate.class.getResource("/img/logo_ritagliato.jpg"));
+    private Image logoImage = logoIcon.getImage();
+    private Image scaledLogo = logoImage.getScaledInstance(175, 175, Image.SCALE_SMOOTH);
+    private ImageIcon logoVisualizzato = new ImageIcon(scaledLogo);
     
     // Utilità
-    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    private DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
     
 	/* Metodi */
     
@@ -89,6 +91,10 @@ public class FinestraTemplate extends JFrame {
 
 	protected Font getFontCelle() {
 		return FONT_CELLE;
+	}
+	
+	protected Font getFontTitoloPrincipale() {
+		return FONT_TITOLO_PRINCIPALE;
 	}
 
 	// Utilità

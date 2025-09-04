@@ -8,7 +8,6 @@ public class Chef {
 	private String descrizione;
 	
 	public Chef(String username, String password, String nome, String cognome, String descrizione) {
-		super();
 		this.username = username;
 		this.password = password;
 		this.nome = nome;
@@ -22,10 +21,6 @@ public class Chef {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
 	}
 
 	public void setPassword(String password) {
@@ -46,10 +41,6 @@ public class Chef {
 
 	public void setCognome(String cognome) {
 		this.cognome = cognome;
-	}
-
-	public String getDescrizione() {
-		return descrizione;
 	}
 
 	public void setDescrizione(String descrizione) {

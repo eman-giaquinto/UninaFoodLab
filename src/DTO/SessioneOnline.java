@@ -11,23 +11,23 @@ public class SessioneOnline {
     private LocalTime orarioInizio;
     private LocalTime orarioFine;
     private String link;
+    
+    // da rivedere
+    public enum Piattaforma {
+        Google_Meet,
+        Zoom,
+        Microsoft_Teams,
+        Cisco_Webex
+    }
 
     public SessioneOnline(int idSessioneOnline, Piattaforma piattaforma, LocalDate dataSessione,
                            LocalTime orarioInizio, LocalTime orarioFine, String link) {
-    	super();
         this.idSessioneOnline = idSessioneOnline;
         this.piattaforma = piattaforma;
         this.dataSessione = dataSessione;
         this.orarioInizio = orarioInizio;
         this.orarioFine = orarioFine;
         this.link = link;
-    }
-
-    public enum Piattaforma {
-        Google_Meet,
-        Zoom,
-        Microsoft_Teams,
-        Cisco_Webex
     }
 
     public int getIdSessioneOnline() {

@@ -24,7 +24,8 @@ public class ImplementazioneChefDAO implements ChefDAO {
 
 	@Override
 	public void verificaUsername(String username) throws DBExceptionRisultatoIndefinito, DBExceptionUsernameNonTrovato {
-		String comando = "SELECT username, password, nome, cognome, descrizione FROM Chef WHERE ( username = '" + username + "');";
+		String comando = "SELECT username, password, nome, cognome, descrizione FROM Chef "
+					   + "WHERE ( username = '" + username + "');";
 		
 		try {
 			risultato = comunicazioneDB.comunicazioneDBQuery(comando);

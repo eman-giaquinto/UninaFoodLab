@@ -2,7 +2,6 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -41,7 +40,7 @@ public class FinestraVisualizzaCorsi extends FinestraTemplate {
     private JSeparator separator;
     private JLabel lblLogo;
     private JTable tableCorsi;
-    private DefaultTableModel modelloTabella;
+    private DefaultTableModel modelloTabellaCorsi;
     private JScrollPane scrollPane;
     private JTableHeader tableHeader;
     
@@ -60,7 +59,7 @@ public class FinestraVisualizzaCorsi extends FinestraTemplate {
 
 		setTitle("UninaFoodLab - Visualizza corsi");
 		setResizable(false);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(FinestraLogin.class.getResource("/img/logo_ritagliato.jpg")));		
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FinestraVisualizzaCorsi.class.getResource("/img/logo_ritagliato.jpg")));		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 950, 600);
 
@@ -77,6 +76,12 @@ public class FinestraVisualizzaCorsi extends FinestraTemplate {
         
         btnBackToMenuPrincipale = new JButton("Torna indietro");
         
+        btnBackToMenuPrincipale.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+                controller.gotoMenuPrincipale(FinestraVisualizzaCorsi.this); 
+        	}
+        });   
+        
         btnBackToMenuPrincipale.setBackground(getColorePrincipale());
         btnBackToMenuPrincipale.setForeground(Color.WHITE);
         btnBackToMenuPrincipale.setFont(getFontBottone());
@@ -86,10 +91,6 @@ public class FinestraVisualizzaCorsi extends FinestraTemplate {
         btnBackToMenuPrincipale.setOpaque(true);
        
         btnBackToMenuPrincipale.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                controller.gotoMenuPrincipale(FinestraVisualizzaCorsi.this); 
-            }
             @Override
             public void mouseEntered(MouseEvent e) {
             	btnBackToMenuPrincipale.setBackground(getColoreBottoneChiaro()); 	
@@ -114,7 +115,7 @@ public class FinestraVisualizzaCorsi extends FinestraTemplate {
 		lblLogo.setBounds(372, 0, 180, 180);
 		panel.add(lblLogo);
 		
-        modelloTabella = new DefaultTableModel(
+        modelloTabellaCorsi = new DefaultTableModel(
                 new Object[][] {},
                 new String[] { "IdCorsoDB","Corso n°", "Tipo di corso", "Data di inizio", "Frequenza sessione", "Data di fine" }
             ) {
@@ -124,7 +125,7 @@ public class FinestraVisualizzaCorsi extends FinestraTemplate {
                 }
             };
             
-        tableCorsi = new JTable(modelloTabella);
+        tableCorsi = new JTable(modelloTabellaCorsi);
         tableCorsi.setToolTipText("Doppio click per visualizzare le sessioni del corso");
 
         tableCorsi.addMouseListener(new MouseAdapter() {
@@ -139,8 +140,8 @@ public class FinestraVisualizzaCorsi extends FinestraTemplate {
                         
                         int idCorso = (int) tableCorsi.getModel().getValueAt(rigaSelezionata, 0);
                         
-//                        controller.richiestaMostraSessioniCorsoSelezionato(idCorso);
-//                        controller.showFinestraSceltaTipoDiSessione();
+                        controller.richiestaMostraSessioniCorsoSelezionato(idCorso);
+                        controller.showFinestraSceltaTipoDiSessione();
 
                     }
                 }
@@ -160,7 +161,7 @@ public class FinestraVisualizzaCorsi extends FinestraTemplate {
         tableCorsi.setRowHeight(30);
 
         for (int i = 0; i < tableCorsi.getColumnModel().getColumnCount(); i++) {
-        	tableCorsi.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        	tableCorsi.getColumnModel().getColumn(i).setCellRenderer(getcenterRenderer());
         }
         
         // Evita il trascinamento del mouse e il selezionamento multiplo delle righe
@@ -285,15 +286,15 @@ public class FinestraVisualizzaCorsi extends FinestraTemplate {
 	}
 	
 	public void aggiungiRigaTabella(Object[] riga) {
-        modelloTabella.addRow(riga);
+        modelloTabellaCorsi.addRow(riga);
     }
 
     public void svuotaTabella() {
-        modelloTabella.setRowCount(0);
+        modelloTabellaCorsi.setRowCount(0);
     }
     
     public void aggiungiTupla(int idCorso, int numeroRiga, Object tipodiCorso, 	String dataInizio, Object frequenzaSessione, String dataFine) {
-		modelloTabella.addRow (new Object [] { idCorso,numeroRiga,tipodiCorso,dataInizio,frequenzaSessione,dataFine});
+		modelloTabellaCorsi.addRow (new Object [] { idCorso,numeroRiga,tipodiCorso,dataInizio,frequenzaSessione,dataFine});
 	}
     
     public void richiestaVisualizzaCorsi(String filtro) {
@@ -303,6 +304,7 @@ public class FinestraVisualizzaCorsi extends FinestraTemplate {
 			svuotaTabella();
 			if(filtro.equals("Tutti")) {
 				messaggioWarningPopUp(e.getMessaggioWarningSchermo());
+                controller.gotoMenuPrincipale(FinestraVisualizzaCorsi.this); 
 			}
 			else
 			{
@@ -314,7 +316,7 @@ public class FinestraVisualizzaCorsi extends FinestraTemplate {
 		}
     }
 
-	public void setFiltri() {
+	public void setFiltriTipiDiCorso() {
 		 tipiDiCorso = controller.impostaDescrizioniTipiDiCorso();
 		 model = new DefaultComboBoxModel<>(tipiDiCorso);
 		 listaFiltri.setModel(model);

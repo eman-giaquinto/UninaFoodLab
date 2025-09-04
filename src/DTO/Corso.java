@@ -48,7 +48,7 @@ public class Corso {
                     return tipo;
                 }
             }
-            throw new IllegalArgumentException("Nessun tipo di corso trovato per la descrizione: " + descrizione);
+            return null;
         }
            
     }
@@ -78,7 +78,7 @@ public class Corso {
                     return freq;
                 }
             }
-            throw new IllegalArgumentException("Nessuna frequenza trovata per la descrizione: " + descrizione);
+            return null;
         }
            
     }

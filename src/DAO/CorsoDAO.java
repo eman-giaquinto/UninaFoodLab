@@ -7,7 +7,8 @@ import DatabaseException.DBExceptionCorsiNonTrovati;
 import DatabaseException.DBExceptionRisultatoIndefinito;
 
 public interface CorsoDAO {
-	
-	ArrayList<Corso> ottieniCorsi(String usernameChef,String filtroRicavato) throws DBExceptionRisultatoIndefinito, DBExceptionCorsiNonTrovati;
+	/* LOGICA TASTO VISUALIZZA */
+	ArrayList<Corso> ottieniCorsi(String usernameChef,String filtroRicavato) throws DBExceptionRisultatoIndefinito,
+	DBExceptionCorsiNonTrovati;
 
 }
