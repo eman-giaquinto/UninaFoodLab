@@ -24,6 +24,7 @@ import DatabaseException.DBExceptionSessioniPraticheNonTrovate;
 import DatabaseException.DBExceptionUsernameNonTrovato;
 import GUI.FinestraLogin;
 import GUI.FinestraMenuPrincipale;
+import GUI.FinestraSceltaAggiungi;
 import GUI.FinestraSceltaTipoDiSessione;
 import GUI.FinestraVisualizzaCorsi;
 import GUI.FinestraVisualizzaRicetteSessionePratica;
@@ -44,6 +45,8 @@ public class Controller {
 	private FinestraSceltaTipoDiSessione finestraSceltaTipoDiSessione;
 	private FinestraVisualizzaSessioniPratiche finestraVisualizzaSessioniPratiche;
 	private FinestraVisualizzaRicetteSessionePratica finestraVisualizzaRicetteSessionePratica;
+	private FinestraSceltaAggiungi finestraSceltaAggiungi;
+
 
 	
 	//DAO
@@ -71,10 +74,6 @@ public class Controller {
 
 
 
-
-
-	
-
 	public static void main(String[] args) {
 		Controller c = new Controller();
 	}
@@ -88,6 +87,8 @@ public class Controller {
 		finestraSceltaTipoDiSessione = new FinestraSceltaTipoDiSessione(this);
 		finestraVisualizzaSessioniPratiche = new FinestraVisualizzaSessioniPratiche(this);
 		finestraVisualizzaRicetteSessionePratica = new FinestraVisualizzaRicetteSessionePratica(this);
+		finestraSceltaAggiungi = new FinestraSceltaAggiungi(this);
+
 
 		finestraLogin.setVisible(true);
 		
@@ -263,5 +264,19 @@ public class Controller {
 		finestraVisualizzaSessioniPratiche.setVisible(true);
 		finestraVisualizzaRicetteSessionePratica.setVisible(false);
 	}
+	
+	/* VISUALIZZA SESSIONI ONLINE  */
+	
+	//...
+	
+	/* LOGICA TASTO AGGIUNGI */
+	
+	/* AGGIUNGI CORSI */
+	public void showFinestraSceltaAggiungi() {
+		finestraSceltaAggiungi.setVisible(true);
+		finestraMenuPrincipale.setVisible(false);
+	}
+
+
 	
 }

@@ -134,7 +134,7 @@ public class FinestraMenuPrincipale extends FinestraTemplate {
 		
 		btnAggiungi.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-		        // Inserire qui la logica per aggiungere un corso
+		    	controller.showFinestraSceltaAggiungi();
         	}
         }); 
 		
