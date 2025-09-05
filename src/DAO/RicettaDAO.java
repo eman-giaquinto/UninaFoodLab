@@ -1,7 +1,14 @@
 package DAO;
 
-public class RicettaDAO {
+import java.util.ArrayList;
 
-	//aggiungere logica per il report mensile
-	
+import DTO.Ricetta;
+import DatabaseException.DBExceptionRicetteNonTrovate;
+import DatabaseException.DBExceptionRisultatoIndefinito;
+
+public interface RicettaDAO {
+	/* LOGICA TASTO VISUALIZZA */
+	ArrayList<Ricetta> ottieniRicette(int idSessionePraticaRicavata) throws DBExceptionRisultatoIndefinito,
+	DBExceptionRicetteNonTrovate;
+
 }

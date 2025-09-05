@@ -7,15 +7,18 @@ import javax.swing.JFrame;
 
 import DAO.ChefDAO;
 import DAO.CorsoDAO;
+import DAO.RicettaDAO;
 import DAO.SessionePraticaDAO;
 import DTO.Chef;
 import DTO.Corso;
+import DTO.Ricetta;
 import DTO.SessionePratica;
 import Database.ComunicazioneDB;
 import DatabaseException.DBExceptionConnessioneNonRiuscita;
 import DatabaseException.DBExceptionCorsiNonTrovati;
 import DatabaseException.DBExceptionCreazioneStatementFallita;
 import DatabaseException.DBExceptionPasswordErrata;
+import DatabaseException.DBExceptionRicetteNonTrovate;
 import DatabaseException.DBExceptionRisultatoIndefinito;
 import DatabaseException.DBExceptionSessioniPraticheNonTrovate;
 import DatabaseException.DBExceptionUsernameNonTrovato;
@@ -23,9 +26,11 @@ import GUI.FinestraLogin;
 import GUI.FinestraMenuPrincipale;
 import GUI.FinestraSceltaTipoDiSessione;
 import GUI.FinestraVisualizzaCorsi;
+import GUI.FinestraVisualizzaRicetteSessionePratica;
 import GUI.FinestraVisualizzaSessioniPratiche;
 import ImplementazioniDAO.ImplementazioneChefDAO;
 import ImplementazioniDAO.ImplementazioneCorsoDAO;
+import ImplementazioniDAO.ImplementazioneRicettaDAO;
 import ImplementazioniDAO.ImplementazioneSessionePraticaDAO;
 
 public class Controller {
@@ -38,12 +43,15 @@ public class Controller {
 	private FinestraVisualizzaCorsi finestraVisualizzaCorsi;
 	private FinestraSceltaTipoDiSessione finestraSceltaTipoDiSessione;
 	private FinestraVisualizzaSessioniPratiche finestraVisualizzaSessioniPratiche;
+	private FinestraVisualizzaRicetteSessionePratica finestraVisualizzaRicetteSessionePratica;
 
 	
 	//DAO
 	private ChefDAO chefDAO;
     private CorsoDAO corsoDAO;
     private SessionePraticaDAO sessionePraticaDAO;
+    private RicettaDAO ricettaDAO;
+
 
 
 	
@@ -56,6 +64,10 @@ public class Controller {
     private int idCorsoSelezionato;
     private ArrayList<SessionePratica> sessioniPraticheVisualizzate;
     private DateTimeFormatter formatoOraItaliana = DateTimeFormatter.ofPattern("HH:mm");
+    private int idSessionePraticaSelezionata;
+    private ArrayList<Ricetta> ricetteSessionePraticaVisualizzate;
+
+
 
 
 
@@ -75,6 +87,7 @@ public class Controller {
 		finestraVisualizzaCorsi = new FinestraVisualizzaCorsi(this);
 		finestraSceltaTipoDiSessione = new FinestraSceltaTipoDiSessione(this);
 		finestraVisualizzaSessioniPratiche = new FinestraVisualizzaSessioniPratiche(this);
+		finestraVisualizzaRicetteSessionePratica = new FinestraVisualizzaRicetteSessionePratica(this);
 
 		finestraLogin.setVisible(true);
 		
@@ -94,6 +107,8 @@ public class Controller {
 		chefDAO = new ImplementazioneChefDAO(comunicazioneDB);
     	corsoDAO = new ImplementazioneCorsoDAO(comunicazioneDB); 
         sessionePraticaDAO = new ImplementazioneSessionePraticaDAO(comunicazioneDB);
+        ricettaDAO = new ImplementazioneRicettaDAO(comunicazioneDB);
+
 
 
 	}
@@ -213,7 +228,40 @@ public class Controller {
 	
 	/* VISUALIZZA RICETTE DELLE SESSIONI PRATICHE */
 	
+	public void richiestaMostraRicetteSessioneSelezionata(int idSessioneRichiesta) {
+		idSessionePraticaSelezionata=idSessioneRichiesta;
+	}
 	
+	public void showFinestraVisualizzaRicetteSessionePratica() {
+		finestraVisualizzaRicetteSessionePratica.setVisible(true);
+		finestraVisualizzaSessioniPratiche.setVisible(false);
+		finestraVisualizzaRicetteSessionePratica.richiestaVisualizzaRicette();
+	}
 	
+	public void richiestaConfermataVisualizzaRicette() throws DBExceptionRisultatoIndefinito, DBExceptionRicetteNonTrovate{
+		ricetteSessionePraticaVisualizzate = ricettaDAO.ottieniRicette(idSessionePraticaSelezionata);
+		// Se non vengono rilanciate eccezioni allora procedo a stampare a schermo le sessioni pratiche ricavate
+		stampaTabellaRicetteSessionePratica();
+	}
+	
+	private void stampaTabellaRicetteSessionePratica() {
+		finestraVisualizzaRicetteSessionePratica.svuotaTabella();
+	    
+		int numeroRicettaSessionePratica=1;
+		// Per ogni ricetta aggiungo una tupla alla tabella visualizzata a schermo 
+		for (Ricetta ricette : ricetteSessionePraticaVisualizzate) {
+			finestraVisualizzaRicetteSessionePratica.aggiungiTupla(
+					numeroRicettaSessionePratica++,
+					ricette.getNome(),
+					ricette.getDescrizione(),
+					ricette.getGradoDifficoltà().getDescrizione()
+	            );
+		}
+	}
+	
+	public void backToFinestraVisualizzaSessioniPratiche() {
+		finestraVisualizzaSessioniPratiche.setVisible(true);
+		finestraVisualizzaRicetteSessionePratica.setVisible(false);
+	}
 	
 }

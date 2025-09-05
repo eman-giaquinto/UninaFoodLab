@@ -1,42 +1,58 @@
 package DTO;
 
 public class Ricetta {
+	private String nome;
+	
+	private String descrizione;
+	
+	private GradoDifficoltà gradoDifficoltà;
+	
+	// Enum per il grado di difficoltà delle ricette
+	public enum GradoDifficoltà {
+	    FACILE("Facile"),
+	    MEDIO("Medio"),
+	    DIFFICILE("Difficile");
 
-    private String nome;
-    private String descrizione;
-    private GradoDiff gradoDiff;
+		// Descrizione ottenuta dall' enum non modificabile
+        private final String descrizione;
 
-    public Ricetta(String nome, String descrizione, GradoDiff gradoDiff) {
-    	super();
-        this.nome = nome;
-        this.descrizione = descrizione;
-        this.gradoDiff = gradoDiff;
-    }
+        // Costruttore per la creazione di un oggetto di tipo grado difficoltà
+		GradoDifficoltà(String descrizione) {
+            this.descrizione = descrizione;
+        }
 
-    public enum GradoDiff {
-        Facile,
-        Medio,
-        Difficile
-    }
+        public String getDescrizione() {
+            return descrizione;
+        }
+        
+        // Questo metodo deve essere pubblico per essere chiamato dall'esterno
+        public static GradoDifficoltà fromDescrizione(String descrizione) {
+            for (GradoDifficoltà tipo : GradoDifficoltà.values()) {
+                if (tipo.descrizione.equalsIgnoreCase(descrizione)) {
+                    return tipo;
+                }
+            }
+            throw new IllegalArgumentException("Nessun tipo di grado difficoltà trovato per la descrizione: " + descrizione);
+        }
+	        
+	}
+	
+	public Ricetta(String nome, String descrizione, GradoDifficoltà gradoDifficoltà) {
+		this.nome = nome;
+		this.descrizione = descrizione;
+		this.gradoDifficoltà = gradoDifficoltà;
+	}
 
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+	public String getNome() {
+		return nome;
+	}
 
-    public String getDescrizione() {
-        return descrizione;
-    }
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
-    }
+	public String getDescrizione() {
+		return descrizione;
+	}
 
-    public GradoDiff getGradoDiff() {
-        return gradoDiff;
-    }
-    public void setGradoDiff(GradoDiff gradoDiff) {
-        this.gradoDiff = gradoDiff;
-    }
+	public GradoDifficoltà getGradoDifficoltà() {
+		return gradoDifficoltà;
+	}
+		
 }

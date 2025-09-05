@@ -49,7 +49,7 @@ public class ImplementazioneSessionePraticaDAO implements SessionePraticaDAO{
 	            		risultato.getTime("orariofine"),
 	            		risultato.getInt("fkcorso"));
 	            
-	            // Aggiungi l'oggetto Corso alla lista
+	            // Aggiungi l'oggetto Sessione pratica alla lista
 	            sessioniPratiche.add(tempSessionePratica);
 	        }
 	    } catch (SQLException e) {

@@ -128,9 +128,8 @@ public class FinestraVisualizzaSessioniPratiche extends FinestraTemplate {
                         
                         int idSessionePratica = (int) tableSessioniPratiche.getModel().getValueAt(rigaSelezionata, 0);
                         
-//                        controller.richiestaMostraRicetteSessioneSelezionata(idSessionePratica);
-//                        controller.showFinestraVisualizzaRicetteSessionePratica();
-
+                        controller.richiestaMostraRicetteSessioneSelezionata(idSessionePratica);
+                        controller.showFinestraVisualizzaRicetteSessionePratica();
                     }
                 }
             }

@@ -48,7 +48,7 @@ public class Corso {
                     return tipo;
                 }
             }
-            return null;
+            throw new IllegalArgumentException("Nessuna frequenza sessione trovata per la descrizione: " + descrizione);
         }
            
     }
