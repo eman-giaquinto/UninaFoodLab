@@ -105,7 +105,7 @@ public class FinestraSceltaTipoDiSessione extends FinestraTemplate {
         
 		btnVisualizzaSessioniOnline.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//controller.showFinestraVisualizzaSessioniOnline();
+				controller.showFinestraVisualizzaSessioniOnline();
 			}
 		});
 		

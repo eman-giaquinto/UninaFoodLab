@@ -60,7 +60,7 @@ public class FinestraVisualizzaRicetteSessionePratica extends FinestraTemplate {
         panel.setBounds(0, 0, 934, 561);
         contentPane.add(panel);
         
-        btnBackToSessioniPratiche = new JButton("<html><center>Torna alle<br>sessioni pratiche</center></html>");
+        btnBackToSessioniPratiche = new JButton("Torna indietro");
         
         btnBackToSessioniPratiche.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -203,11 +203,11 @@ public class FinestraVisualizzaRicetteSessionePratica extends FinestraTemplate {
         btnGoToMenuPrincipale.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseEntered(MouseEvent e) {
-            	btnBackToSessioniPratiche.setBackground(getColoreBottoneChiaro()); 	
+        		btnGoToMenuPrincipale.setBackground(getColoreBottoneChiaro()); 	
         	}
         	@Override
         	public void mouseExited(MouseEvent e) {
-            	btnBackToSessioniPratiche.setBackground(getColorePrincipale()); 
+        		btnGoToMenuPrincipale.setBackground(getColorePrincipale()); 
         	}
         });
                 

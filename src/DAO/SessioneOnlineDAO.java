@@ -1,6 +1,14 @@
 package DAO;
 
-public class SessioneOnlineDAO {
+import java.util.ArrayList;
 
-	//aggiungere la logica per il report mensile
+import DTO.SessioneOnline;
+import DatabaseException.DBExceptionRisultatoIndefinito;
+import DatabaseException.DBExceptionSessioniOnlineNonTrovate;
+
+public interface SessioneOnlineDAO {
+	/* LOGICA TASTO VISUALIZZA */
+	ArrayList<SessioneOnline> ottieniSessioniOnline(int idCorsoRicavato) throws DBExceptionRisultatoIndefinito,
+	DBExceptionSessioniOnlineNonTrovate;
+
 }

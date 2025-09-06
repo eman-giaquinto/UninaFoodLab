@@ -8,10 +8,12 @@ import javax.swing.JFrame;
 import DAO.ChefDAO;
 import DAO.CorsoDAO;
 import DAO.RicettaDAO;
+import DAO.SessioneOnlineDAO;
 import DAO.SessionePraticaDAO;
 import DTO.Chef;
 import DTO.Corso;
 import DTO.Ricetta;
+import DTO.SessioneOnline;
 import DTO.SessionePratica;
 import Database.ComunicazioneDB;
 import DatabaseException.DBExceptionConnessioneNonRiuscita;
@@ -20,6 +22,7 @@ import DatabaseException.DBExceptionCreazioneStatementFallita;
 import DatabaseException.DBExceptionPasswordErrata;
 import DatabaseException.DBExceptionRicetteNonTrovate;
 import DatabaseException.DBExceptionRisultatoIndefinito;
+import DatabaseException.DBExceptionSessioniOnlineNonTrovate;
 import DatabaseException.DBExceptionSessioniPraticheNonTrovate;
 import DatabaseException.DBExceptionUsernameNonTrovato;
 import GUI.FinestraLogin;
@@ -28,10 +31,12 @@ import GUI.FinestraSceltaAggiungi;
 import GUI.FinestraSceltaTipoDiSessione;
 import GUI.FinestraVisualizzaCorsi;
 import GUI.FinestraVisualizzaRicetteSessionePratica;
+import GUI.FinestraVisualizzaSessioniOnline;
 import GUI.FinestraVisualizzaSessioniPratiche;
 import ImplementazioniDAO.ImplementazioneChefDAO;
 import ImplementazioniDAO.ImplementazioneCorsoDAO;
 import ImplementazioniDAO.ImplementazioneRicettaDAO;
+import ImplementazioniDAO.ImplementazioneSessioneOnlineDAO;
 import ImplementazioniDAO.ImplementazioneSessionePraticaDAO;
 
 public class Controller {
@@ -46,7 +51,7 @@ public class Controller {
 	private FinestraVisualizzaSessioniPratiche finestraVisualizzaSessioniPratiche;
 	private FinestraVisualizzaRicetteSessionePratica finestraVisualizzaRicetteSessionePratica;
 	private FinestraSceltaAggiungi finestraSceltaAggiungi;
-
+	private FinestraVisualizzaSessioniOnline finestraVisualizzaSessioniOnline;
 
 	
 	//DAO
@@ -54,6 +59,7 @@ public class Controller {
     private CorsoDAO corsoDAO;
     private SessionePraticaDAO sessionePraticaDAO;
     private RicettaDAO ricettaDAO;
+    private SessioneOnlineDAO sessioneOnlineDAO;
 
 
 
@@ -69,6 +75,8 @@ public class Controller {
     private DateTimeFormatter formatoOraItaliana = DateTimeFormatter.ofPattern("HH:mm");
     private int idSessionePraticaSelezionata;
     private ArrayList<Ricetta> ricetteSessionePraticaVisualizzate;
+    private ArrayList<SessioneOnline> sessioniOnlineVisualizzate;
+
 
 
 
@@ -88,6 +96,7 @@ public class Controller {
 		finestraVisualizzaSessioniPratiche = new FinestraVisualizzaSessioniPratiche(this);
 		finestraVisualizzaRicetteSessionePratica = new FinestraVisualizzaRicetteSessionePratica(this);
 		finestraSceltaAggiungi = new FinestraSceltaAggiungi(this);
+		finestraVisualizzaSessioniOnline = new FinestraVisualizzaSessioniOnline(this);
 
 
 		finestraLogin.setVisible(true);
@@ -109,6 +118,7 @@ public class Controller {
     	corsoDAO = new ImplementazioneCorsoDAO(comunicazioneDB); 
         sessionePraticaDAO = new ImplementazioneSessionePraticaDAO(comunicazioneDB);
         ricettaDAO = new ImplementazioneRicettaDAO(comunicazioneDB);
+        sessioneOnlineDAO = new ImplementazioneSessioneOnlineDAO(comunicazioneDB);
 
 
 
@@ -267,7 +277,38 @@ public class Controller {
 	
 	/* VISUALIZZA SESSIONI ONLINE  */
 	
-	//...
+	public void showFinestraVisualizzaSessioniOnline() {
+		finestraVisualizzaSessioniOnline.setVisible(true);
+		finestraVisualizzaCorsi.setVisible(false);
+		finestraSceltaTipoDiSessione.setVisible(false);
+		finestraVisualizzaSessioniOnline.richiestaVisualizzaSessioniOnline();
+	}
+	
+	public void richiestaConfermataVisualizzaSessioniOnline() throws DBExceptionRisultatoIndefinito, DBExceptionSessioniOnlineNonTrovate  {
+		sessioniOnlineVisualizzate = sessioneOnlineDAO.ottieniSessioniOnline(idCorsoSelezionato);
+		// Se non vengono rilanciate eccezioni allora procedo a stampare a schermo le sessioni pratiche ricavate
+		stampaTabellaSessioniOnline();
+	}
+	
+	private void stampaTabellaSessioniOnline() {
+		finestraVisualizzaSessioniOnline.svuotaTabella();
+		
+	    
+		int numeroSessioneOnline=1;
+		// Per ogni sessione online aggiungo una tupla alla tabella visualizzata a schermo 
+		for (SessioneOnline sessioneonline : sessioniOnlineVisualizzate) {
+			finestraVisualizzaSessioniOnline.aggiungiTupla(
+					sessioneonline.getIdSessioneOnline(),
+					numeroSessioneOnline++,
+					sessioneonline.getPiattaforma().getDescrizione(),
+					sessioneonline.getDataSessione().format(formatoDataItaliana),
+					sessioneonline.getOrarioInizio().toLocalTime().format(formatoOraItaliana),
+					sessioneonline.getOrarioFine().toLocalTime().format(formatoOraItaliana),
+					sessioneonline.getLink(),
+					sessioneonline.getFkCorso()
+	            );
+		}
+	}
 	
 	/* LOGICA TASTO AGGIUNGI */
 	

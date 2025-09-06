@@ -74,7 +74,7 @@ public class FinestraVisualizzaCorsi extends FinestraTemplate {
         panel.setBounds(0, 0, 934, 561);
         contentPane.add(panel);
         
-        btnBackToMenuPrincipale = new JButton("Torna indietro");
+        btnBackToMenuPrincipale = new JButton("Torna al menu");
         
         btnBackToMenuPrincipale.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
