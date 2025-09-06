@@ -26,6 +26,8 @@ public class FinestraTemplate extends JFrame {
     private final static Font FONT_HEADER = new Font("SansSerif", Font.BOLD, 15); 
     private final static Font FONT_CELLE = new Font("SansSerif", Font.PLAIN, 15);
     private final static Font FONT_TITOLO_PRINCIPALE = new Font("Verdana", Font.BOLD | Font.ITALIC, 20);
+    private final static Font FONT_TITOLO_SECONDARIO = new Font("Sans Serif Collection", Font.BOLD, 21);
+    private final static Font FONT_INSERIMENTO = new Font("Tahoma", Font.PLAIN, 18);
 
 
     // font font_casella_username_and_password = new font new Font("Tahoma", Font.PLAIN, 20) | da vedere se implemetare o meno
@@ -97,6 +99,14 @@ public class FinestraTemplate extends JFrame {
 		return FONT_TITOLO_PRINCIPALE;
 	}
 
+	protected Font getFontTitoloSecondario() {
+		return FONT_TITOLO_SECONDARIO;
+	}
+	
+	protected Font getFontInserimento() {
+		return FONT_INSERIMENTO;
+	}
+	
 	// Utilità
 	protected DefaultTableCellRenderer getcenterRenderer() {
 		return centerRenderer;

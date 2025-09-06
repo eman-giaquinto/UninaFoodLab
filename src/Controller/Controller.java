@@ -19,12 +19,15 @@ import Database.ComunicazioneDB;
 import DatabaseException.DBExceptionConnessioneNonRiuscita;
 import DatabaseException.DBExceptionCorsiNonTrovati;
 import DatabaseException.DBExceptionCreazioneStatementFallita;
+import DatabaseException.DBExceptionDataInizioMaggioreDataFine;
+import DatabaseException.DBExceptionOperazioneQueryDML;
 import DatabaseException.DBExceptionPasswordErrata;
 import DatabaseException.DBExceptionRicetteNonTrovate;
 import DatabaseException.DBExceptionRisultatoIndefinito;
 import DatabaseException.DBExceptionSessioniOnlineNonTrovate;
 import DatabaseException.DBExceptionSessioniPraticheNonTrovate;
 import DatabaseException.DBExceptionUsernameNonTrovato;
+import GUI.FinestraAggiungiCorso;
 import GUI.FinestraLogin;
 import GUI.FinestraMenuPrincipale;
 import GUI.FinestraSceltaAggiungi;
@@ -52,6 +55,8 @@ public class Controller {
 	private FinestraVisualizzaRicetteSessionePratica finestraVisualizzaRicetteSessionePratica;
 	private FinestraSceltaAggiungi finestraSceltaAggiungi;
 	private FinestraVisualizzaSessioniOnline finestraVisualizzaSessioniOnline;
+	private FinestraAggiungiCorso finestraAggiungiCorso;
+
 
 	
 	//DAO
@@ -97,6 +102,8 @@ public class Controller {
 		finestraVisualizzaRicetteSessionePratica = new FinestraVisualizzaRicetteSessionePratica(this);
 		finestraSceltaAggiungi = new FinestraSceltaAggiungi(this);
 		finestraVisualizzaSessioniOnline = new FinestraVisualizzaSessioniOnline(this);
+		finestraAggiungiCorso = new FinestraAggiungiCorso(this);
+
 
 
 		finestraLogin.setVisible(true);
@@ -155,7 +162,7 @@ public class Controller {
 	}
 	
 	public void richiestaConfermataVisualizzaCorsi(String filtroScelto) throws DBExceptionRisultatoIndefinito,
-					DBExceptionCorsiNonTrovati{
+	DBExceptionCorsiNonTrovati{
 		
 		String usernameChef = chefLoggato.getUsername();
 		corsiVisualizzati = corsoDAO.ottieniCorsi(usernameChef,filtroScelto);
@@ -183,7 +190,7 @@ public class Controller {
 	
 	public String[] impostaDescrizioniTipiDiCorso() {
 		//Imposta l'elenco dei tipi di corsi per filtrare i corsi
-		String[] tipiDiCorso = Corso.ottieniDescrizioniTipiDiCorso();
+		String[] tipiDiCorso = Corso.ottieniDescrizioniTipiDiCorsi("Tutti");
 	    return tipiDiCorso;
 	}
 	
@@ -212,7 +219,7 @@ public class Controller {
 	}
 	
 	public void richiestaConfermataVisualizzaSessioniPratiche() throws DBExceptionRisultatoIndefinito, 
-					DBExceptionSessioniPraticheNonTrovate{
+	DBExceptionSessioniPraticheNonTrovate{
 		
 		sessioniPraticheVisualizzate = sessionePraticaDAO.ottieniSessioniPratiche(idCorsoSelezionato);
 		// Se non vengono rilanciate eccezioni allora procedo a stampare a schermo le sessioni pratiche ricavate
@@ -284,7 +291,9 @@ public class Controller {
 		finestraVisualizzaSessioniOnline.richiestaVisualizzaSessioniOnline();
 	}
 	
-	public void richiestaConfermataVisualizzaSessioniOnline() throws DBExceptionRisultatoIndefinito, DBExceptionSessioniOnlineNonTrovate  {
+	public void richiestaConfermataVisualizzaSessioniOnline() throws DBExceptionRisultatoIndefinito,
+	DBExceptionSessioniOnlineNonTrovate  {
+		
 		sessioniOnlineVisualizzate = sessioneOnlineDAO.ottieniSessioniOnline(idCorsoSelezionato);
 		// Se non vengono rilanciate eccezioni allora procedo a stampare a schermo le sessioni pratiche ricavate
 		stampaTabellaSessioniOnline();
@@ -293,7 +302,6 @@ public class Controller {
 	private void stampaTabellaSessioniOnline() {
 		finestraVisualizzaSessioniOnline.svuotaTabella();
 		
-	    
 		int numeroSessioneOnline=1;
 		// Per ogni sessione online aggiungo una tupla alla tabella visualizzata a schermo 
 		for (SessioneOnline sessioneonline : sessioniOnlineVisualizzate) {
@@ -318,6 +326,43 @@ public class Controller {
 		finestraMenuPrincipale.setVisible(false);
 	}
 
-
+	public void showFinestraAggiungiCorso() {
+		// Prepara la schermata con i relativi campi di inserimento 
+		finestraAggiungiCorso.setCampiInserimento();
+		finestraAggiungiCorso.setVisible(true);
+		finestraSceltaAggiungi.setVisible(false);
+	}
+	
+	public void backToFinestraSceltaAggiungi(JFrame finestra) {
+		finestraSceltaAggiungi.setVisible(true);
+		finestra.setVisible(false);
+	}
+	
+	public String[] getDescrizioniTipiDiCorso() {
+		String[] tipiDiCorso = Corso.ottieniDescrizioniTipiDiCorsi("Tutte");
+	    return tipiDiCorso;
+	}
+	
+	public String[] getDescrizioniFrequenzeSessioni() {
+		String[] frquenzeSessioni = Corso.ottieniDescrizioniFrequenzeSessioni();
+	    return frquenzeSessioni;
+	}
+	
+	public void richiestaCreaCorso(String tipoDiCorsoInserito,String dataDiInizioInserita,String dataDiFineInserita,
+	String frequenzaSessioneInserita) throws DBExceptionOperazioneQueryDML,DBExceptionDataInizioMaggioreDataFine,
+	DBExceptionRisultatoIndefinito {
+		
+		int idCorsoCreato = corsoDAO.creaCorso(tipoDiCorsoInserito,dataDiInizioInserita,dataDiFineInserita,
+											   frequenzaSessioneInserita);
+		
+		/* Se il corso è stato creato correttamente e non sono state rilanciate eccezioni,
+		 * lo vado a registrare nel database e ad associare allo chef loggato*/
+		
+		String usernameChef = chefLoggato.getUsername();
+		
+		corsoDAO.registraCorso(usernameChef,idCorsoCreato);
+		
+	}
+	
 	
 }

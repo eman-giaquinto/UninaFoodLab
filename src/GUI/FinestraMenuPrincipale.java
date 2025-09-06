@@ -70,14 +70,6 @@ public class FinestraMenuPrincipale extends FinestraTemplate {
 		
 		panel.add(lblNomeCognomeChef);
 		
-		Component verticalStrut = Box.createVerticalStrut(20);
-		verticalStrut.setBounds(300, 0, 24, 561);
-		panel.add(verticalStrut);
-		
-		Component verticalStrut_1 = Box.createVerticalStrut(20);
-		verticalStrut_1.setBounds(600, 0, 24, 561);
-		panel.add(verticalStrut_1);
-		
 		JLabel lblLogo = new JLabel("");
 		lblLogo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLogo.setIcon(getLogoVisualizzato());

@@ -8,12 +8,17 @@ import DAO.CorsoDAO;
 import DTO.Corso;
 import Database.ComunicazioneDB;
 import DatabaseException.DBExceptionCorsiNonTrovati;
+import DatabaseException.DBExceptionDataInizioMaggioreDataFine;
+import DatabaseException.DBExceptionOperazioneQueryDML;
 import DatabaseException.DBExceptionRisultatoIndefinito;
 
 public class ImplementazioneCorsoDAO implements CorsoDAO{
 
 	 private ComunicazioneDB comunicazioneDB; 
 	 private ResultSet risultato; 
+	 
+	 /* Lista dei nomi dei vincoli */
+	 private static final String CONSTRAINT_DATA_INIZIO_MINORE_O_UGUALE_DATA_FINE = "DataI_MinEqual_DataF";
 	
 	 public ImplementazioneCorsoDAO(ComunicazioneDB comunicazioneDB) {
 		 this.comunicazioneDB=comunicazioneDB;
@@ -29,6 +34,7 @@ public class ImplementazioneCorsoDAO implements CorsoDAO{
     				   + "JOIN Registra ON IDCorso = FKCorso "  
     				   + "WHERE FKUsername = '" + usernameChef + "'";
 	    
+	    // Ricavo tutti i corsi di qualsiasi tipo
 	    if(!filtroRicavato.equals("Tutti")) {
 	    	comando = comando + " AND TipoDiCorso = '" + filtroRicavato + "'"; 
 	    }
@@ -58,6 +64,50 @@ public class ImplementazioneCorsoDAO implements CorsoDAO{
 	    }
 	    
 		return corsi;
+	}
+	
+	@Override
+	public int creaCorso(String tipoDiCorsoRicavato, String dataDiInizioRicavato, String dataDiFineRicavato,
+		String frequenzaSessioneRicavato) throws DBExceptionOperazioneQueryDML, DBExceptionDataInizioMaggioreDataFine,
+		DBExceptionRisultatoIndefinito {
+		
+		// Inizializzo con un valore sentinella/sporco per individuare un idcorso non valido
+		int idNuovoCorsoAggiunto=-1;
+	    
+		String comando = "INSERT INTO Corso (TipoDiCorso, DataInizio, Freq_Sessione, DataFine) VALUES "  
+	    			   + "( '"+tipoDiCorsoRicavato+"' , '"+dataDiInizioRicavato+"' , "
+	    			   + "  '"+frequenzaSessioneRicavato+"' , '"+dataDiFineRicavato+"' ); ";
+	    
+	    try{
+		    comunicazioneDB.mandaQueryDML(comando);
+		    risultato = comunicazioneDB.numeroTuplaAggiunta();
+		    
+		    // Se non vengono rilanciate eccezioni, recupero il numero di tupla aggiunto
+		    if (comunicazioneDB.prossimaTupla()) {
+		    	idNuovoCorsoAggiunto = risultato.getInt(1);
+		    }
+		    
+	    } catch (SQLException e){
+	    	if (e.getMessage().contains(CONSTRAINT_DATA_INIZIO_MINORE_O_UGUALE_DATA_FINE.toLowerCase())) {
+	    		throw new DBExceptionDataInizioMaggioreDataFine();
+	    	}
+	    	throw new DBExceptionOperazioneQueryDML();
+	    }
+    	return idNuovoCorsoAggiunto;
+		
+	}
+	
+	@Override
+	public void registraCorso(String usernameChef, int idCorsoAggiunto ) throws DBExceptionOperazioneQueryDML {
+		
+		String comando = "INSERT INTO Registra (fkUsername, fkCorso) VALUES "
+					   + " ('"+usernameChef+"' , "+idCorsoAggiunto+" ) " ;
+ 
+		try{
+			comunicazioneDB.mandaQueryDML(comando);
+		} catch (SQLException e) {
+			throw new DBExceptionOperazioneQueryDML();
+		}
 	}
 
 }

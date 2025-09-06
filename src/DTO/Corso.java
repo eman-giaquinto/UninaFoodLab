@@ -112,24 +112,49 @@ public class Corso {
 		return dataFine;
 	}
 	
-	public static String[] ottieniDescrizioniTipiDiCorso() {
+	public static String[] ottieniDescrizioniTipiDiCorsi(String aggiungiFiltro) {
         TipoCorso[] tuttiITipi = TipoCorso.values();
+        String[] descrizioniTipiDiCorso;
         
-        //Creo un array più grande di uno per fare spazio all'elemento iniziale
-        String[] descrizioni = new String[tuttiITipi.length + 1];
-        
-        descrizioni[0] = "Tutti";
-
-        //Itero e completo il resto dell'array, partendo dall'indice 1
-        for (int i = 0; i < tuttiITipi.length; i++) {
-            descrizioni[i + 1] = tuttiITipi[i].getDescrizione();
+        if(aggiungiFiltro.equals("Tutti"))
+        {
+            //Creo un array più grande di uno per fare spazio all'elemento iniziale
+            descrizioniTipiDiCorso = new String[tuttiITipi.length + 1];
+            descrizioniTipiDiCorso[0] = "Tutti";
+            
+            //Itero e completo il resto dell'array, partendo dall'indice 1
+            for (int i = 0; i < tuttiITipi.length; i++) {
+            	descrizioniTipiDiCorso[i + 1] = tuttiITipi[i].getDescrizione();
+            }
+            
         }
-        
-        return descrizioni;
+        else
+        {
+        	/* Restituisco solo le descrizioni dei tipi di corsi */
+            descrizioniTipiDiCorso = new String[tuttiITipi.length];
+            
+            for (int i = 0; i < tuttiITipi.length; i++) {
+            	descrizioniTipiDiCorso[i] = tuttiITipi[i].getDescrizione();
+            }
+        }
+        return descrizioniTipiDiCorso;
     }
 	
-	
-	
+	public static String[] ottieniDescrizioniFrequenzeSessioni() {
+		// Ottengo i valori dell' enum 
+        FrequenzaSessione[] tuttiITipi = FrequenzaSessione.values();
+        
+        String[] descrizioniFrequenzeSessioni;
+     
+        /* Creo un array String e inserisco i le descrizioni dei valori recuperati prima*/
+        descrizioniFrequenzeSessioni = new String[tuttiITipi.length];
+            
+            for (int i = 0; i < tuttiITipi.length; i++) {
+            	descrizioniFrequenzeSessioni[i] = tuttiITipi[i].getDescrizione();
+            }
+            
+        return descrizioniFrequenzeSessioni;
+    }
 	
 	
 }

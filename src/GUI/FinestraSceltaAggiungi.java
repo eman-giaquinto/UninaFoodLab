@@ -104,18 +104,10 @@ public class FinestraSceltaAggiungi extends FinestraTemplate {
 		panel.add(lblTitolo);
         
 		
-		Component verticalStrut = Box.createVerticalStrut(20);
-		verticalStrut.setBounds(300, 0, 24, 561);
-		panel.add(verticalStrut);
-		
-		Component verticalStrut_1 = Box.createVerticalStrut(20);
-		verticalStrut_1.setBounds(600, 0, 24, 561);
-		panel.add(verticalStrut_1);
-		
 		btnAggiungiCorso = new JButton("<html><center>Aggiungi un<br>corso</center></html>");
 		btnAggiungiCorso.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//		    	controller.showFinestraAggiungiCorso();
+		    	controller.showFinestraAggiungiCorso();
 			}
 		});
 		
