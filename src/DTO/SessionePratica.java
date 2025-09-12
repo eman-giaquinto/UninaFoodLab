@@ -17,39 +17,75 @@ public class SessionePratica {
 	
 	private Time orarioFine;
 	
-	private int fkCorso;
-
-	public SessionePratica(int idSessionePratica, int numeroAdesioni, LocalDate dataSessione, Time orarioInizio,Time orarioFine, int fkCorso) {
+	private Corso corsoDiRiferimento;
+	
+	private ArrayList<Ricetta> ricetteAssociate = new ArrayList<>();
+	
+	// Costruttore per il recupero delle sessioni pratiche
+	public SessionePratica(int idSessionePratica, int numeroAdesioni, LocalDate dataSessione, Time orarioInizio,
+			Time orarioFine,Corso corsoDiRiferimento) {
 		this.idSessionePratica = idSessionePratica;
 		this.numeroAdesioni = numeroAdesioni;
 		this.dataSessione = dataSessione;
 		this.orarioInizio = orarioInizio;
 		this.orarioFine = orarioFine;
-		this.fkCorso = fkCorso;
+		this.corsoDiRiferimento=corsoDiRiferimento;
 	}
-	
+
 	public int getIdSessionePratica() {
 		return idSessionePratica;
+	}
+
+	public void setIdSessionePratica(int idSessionePratica) {
+		this.idSessionePratica = idSessionePratica;
 	}
 
 	public int getNumeroAdesioni() {
 		return numeroAdesioni;
 	}
 
+	public void setNumeroAdesioni(int numeroAdesioni) {
+		this.numeroAdesioni = numeroAdesioni;
+	}
+
 	public LocalDate getDataSessione() {
 		return dataSessione;
+	}
+
+	public void setDataSessione(LocalDate dataSessione) {
+		this.dataSessione = dataSessione;
 	}
 
 	public Time getOrarioInizio() {
 		return orarioInizio;
 	}
 
+	public void setOrarioInizio(Time orarioInizio) {
+		this.orarioInizio = orarioInizio;
+	}
+
 	public Time getOrarioFine() {
 		return orarioFine;
 	}
 
-	public int getFkCorso() {
-		return fkCorso;
+	public void setOrarioFine(Time orarioFine) {
+		this.orarioFine = orarioFine;
+	}
+
+	public Corso getCorsoDiRiferimento() {
+		return corsoDiRiferimento;
+	}
+
+	public void setCorsoDiRiferimento(Corso corsoDiRiferimento) {
+		this.corsoDiRiferimento = corsoDiRiferimento;
+	}
+
+	public ArrayList<Ricetta> getRicetteAssociate() {
+		return ricetteAssociate;
+	}
+
+	public void setRicetteAssociate(ArrayList<Ricetta> ricetteAssociate) {
+		this.ricetteAssociate = ricetteAssociate;
 	}
     
 }

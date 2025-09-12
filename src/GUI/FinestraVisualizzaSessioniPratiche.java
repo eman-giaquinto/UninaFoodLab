@@ -105,7 +105,7 @@ public class FinestraVisualizzaSessioniPratiche extends FinestraTemplate {
 		
         modelloTabellaSessioniPratiche = new DefaultTableModel(
                 new Object[][] {},
-                new String[] { "idSessionePratica", "Sessione pratica n°", "Numero adesioni", "Data sessione", "Orario inizio", "Orario fine", "fkCorso" }
+                new String[] { "idSessionePratica", "Sessione pratica n°", "Numero adesioni", "Data sessione", "Orario inizio", "Orario fine" }
             ) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
@@ -141,10 +141,8 @@ public class FinestraVisualizzaSessioniPratiche extends FinestraTemplate {
         tableSessioniPratiche.getColumnModel().getColumn(3).setPreferredWidth(120);
         tableSessioniPratiche.getColumnModel().getColumn(4).setPreferredWidth(100);
         tableSessioniPratiche.getColumnModel().getColumn(5).setPreferredWidth(120);
-        tableSessioniPratiche.getColumnModel().getColumn(6).setPreferredWidth(1);
         
         // Nascondi colonna fkCorso e colonna idSessionePratica
-        tableSessioniPratiche.removeColumn(tableSessioniPratiche.getColumnModel().getColumn(6));
         tableSessioniPratiche.removeColumn(tableSessioniPratiche.getColumnModel().getColumn(0)); 
         
         tableSessioniPratiche.setFont(getFontCelle());
@@ -185,13 +183,13 @@ public class FinestraVisualizzaSessioniPratiche extends FinestraTemplate {
         modelloTabellaSessioniPratiche.setRowCount(0);
     }
     
-    public void aggiungiTupla(int idSessionePratica, int numeroSessionePratica, int numeroAdesioni, String dataSessione, String orarioInizio, String orarioFine, int fkCorso) {
-    	modelloTabellaSessioniPratiche.addRow(new Object[] { idSessionePratica, numeroSessionePratica, numeroAdesioni, dataSessione, orarioInizio, orarioFine, fkCorso });
+    public void aggiungiTupla(int idSessionePratica, int numeroSessionePratica, int numeroAdesioni, String dataSessione, String orarioInizio, String orarioFine) {
+    	modelloTabellaSessioniPratiche.addRow(new Object[] { idSessionePratica, numeroSessionePratica, numeroAdesioni, dataSessione, orarioInizio, orarioFine });
     }
     
     public void richiestaVisualizzaSessioniPratiche() {
     	try {
-			controller.richiestaConfermataVisualizzaSessioniPratiche();
+			controller.richiestaVisualizzaSessioniPraticheSchermo();
 		} catch (DBExceptionSessioniPraticheNonTrovate e) {
 			svuotaTabella();
 			messaggioWarningPopUp(e.getMessaggioWarningSchermo());	

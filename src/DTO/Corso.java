@@ -13,6 +13,12 @@ public class Corso {
 	private FrequenzaSessione frequenzaSessione;
 	
 	private LocalDate dataFine;
+	
+	private Chef chefDiRiferimento;
+	
+	private ArrayList<SessionePratica> sessioniPratiche = new ArrayList<>();
+
+	private ArrayList<SessioneOnline> sessioniOnline = new ArrayList<>();
 		
 	/* Classe interna che rappresenta l' enum TipoCorso */
 	public enum TipoCorso {
@@ -83,35 +89,92 @@ public class Corso {
            
     }
 
+	// Costruttore per il recupero dei corsi
 	public Corso(int idCorso, TipoCorso tipoDiCorso, LocalDate dataInizio, FrequenzaSessione frequenzaSessione,
-			LocalDate dataFine) {
+			LocalDate dataFine,Chef chefDiRiferimento) {
 		this.idCorso = idCorso;
 		this.tipoDiCorso = tipoDiCorso;
 		this.dataInizio = dataInizio;
 		this.frequenzaSessione = frequenzaSessione;
 		this.dataFine = dataFine;
+		this.chefDiRiferimento = chefDiRiferimento;
+
 	}
 	
+	// Costruttore per l'inserimento dei corsi
+	public Corso(TipoCorso tipoDiCorso, LocalDate dataInizio, FrequenzaSessione frequenzaSessione,
+			LocalDate dataFine,Chef chefDiRiferimento) {
+		this.tipoDiCorso = tipoDiCorso;
+		this.dataInizio = dataInizio;
+		this.frequenzaSessione = frequenzaSessione;
+		this.dataFine = dataFine;
+		this.chefDiRiferimento = chefDiRiferimento;
+	}
+
 	public int getIdCorso() {
 		return idCorso;
+	}
+
+	public void setIdCorso(int idCorso) {
+		this.idCorso = idCorso;
 	}
 
 	public TipoCorso getTipoDiCorso() {
 		return tipoDiCorso;
 	}
 
+	public void setTipoDiCorso(TipoCorso tipoDiCorso) {
+		this.tipoDiCorso = tipoDiCorso;
+	}
+
 	public LocalDate getDataInizio() {
 		return dataInizio;
+	}
+
+	public void setDataInizio(LocalDate dataInizio) {
+		this.dataInizio = dataInizio;
 	}
 
 	public FrequenzaSessione getFrequenzaSessione() {
 		return frequenzaSessione;
 	}
 
+	public void setFrequenzaSessione(FrequenzaSessione frequenzaSessione) {
+		this.frequenzaSessione = frequenzaSessione;
+	}
+
 	public LocalDate getDataFine() {
 		return dataFine;
 	}
+
+	public void setDataFine(LocalDate dataFine) {
+		this.dataFine = dataFine;
+	}
+
+	public Chef getChefDiRiferimento() {
+		return chefDiRiferimento;
+	}
 	
+	public void setChefDiRiferimento(Chef chefDiRiferimento) {
+		this.chefDiRiferimento = chefDiRiferimento;
+	}
+
+	public ArrayList<SessionePratica> getSessioniPratiche() {
+		return sessioniPratiche;
+	}
+
+	public void setSessioniPratiche(ArrayList<SessionePratica> sessioniPratiche) {
+		this.sessioniPratiche = sessioniPratiche;
+	}
+
+	public ArrayList<SessioneOnline> getSessioniOnline() {
+		return sessioniOnline;
+	}
+
+	public void setSessioniOnline(ArrayList<SessioneOnline> sessioniOnline) {
+		this.sessioniOnline = sessioniOnline;
+	}
+
 	public static String[] ottieniDescrizioniTipiDiCorsi(String aggiungiFiltro) {
         TipoCorso[] tuttiITipi = TipoCorso.values();
         String[] descrizioniTipiDiCorso;
@@ -155,6 +218,4 @@ public class Corso {
             
         return descrizioniFrequenzeSessioni;
     }
-	
-	
 }

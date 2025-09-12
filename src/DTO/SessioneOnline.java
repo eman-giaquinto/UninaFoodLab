@@ -6,7 +6,7 @@ import java.time.LocalTime;
 
 public class SessioneOnline {
 
-private int idSessioneOnline;
+	private int idSessioneOnline;
 	
 	private Piattaforma piattaforma;
 	
@@ -18,8 +18,8 @@ private int idSessioneOnline;
 	
 	private String link;
 	
-	private int fkCorso;
-	
+	private Corso corsoDiRiferimento;
+
 	/* Classe interna che rappresenta l' enum Piattaforma */
 	public enum Piattaforma{
 		GOOGLE_MEET("Google Meet"),
@@ -50,44 +50,72 @@ private int idSessioneOnline;
         }
 	}
 	
+	// Costruttore per il recupero delle sessioni online
 	public SessioneOnline(int idSessioneOnline, Piattaforma piattaforma, LocalDate dataSessione, Time orarioInizio,
-			Time orarioFine, String link, int fkCorso) {
-		this.idSessioneOnline = idSessioneOnline;
-		this.piattaforma = piattaforma;
-		this.dataSessione = dataSessione;
-		this.orarioInizio = orarioInizio;
-		this.orarioFine = orarioFine;
-		this.link = link;
-		this.fkCorso = fkCorso;
+			Time orarioFine, String link,Corso corsoDiRiferimento) {
+		this.idSessioneOnline=idSessioneOnline;
+		this.piattaforma=piattaforma;
+		this.dataSessione=dataSessione;
+		this.orarioInizio=orarioInizio;
+		this.orarioFine=orarioFine;
+		this.link=link;
+		this.corsoDiRiferimento=corsoDiRiferimento;
 	}
 
 	public int getIdSessioneOnline() {
 		return idSessioneOnline;
 	}
 
+	public void setIdSessioneOnline(int idSessioneOnline) {
+		this.idSessioneOnline = idSessioneOnline;
+	}
+
 	public Piattaforma getPiattaforma() {
 		return piattaforma;
+	}
+
+	public void setPiattaforma(Piattaforma piattaforma) {
+		this.piattaforma = piattaforma;
 	}
 
 	public LocalDate getDataSessione() {
 		return dataSessione;
 	}
 
+	public void setDataSessione(LocalDate dataSessione) {
+		this.dataSessione = dataSessione;
+	}
+
 	public Time getOrarioInizio() {
 		return orarioInizio;
+	}
+
+	public void setOrarioInizio(Time orarioInizio) {
+		this.orarioInizio = orarioInizio;
 	}
 
 	public Time getOrarioFine() {
 		return orarioFine;
 	}
 
+	public void setOrarioFine(Time orarioFine) {
+		this.orarioFine = orarioFine;
+	}
+
 	public String getLink() {
 		return link;
 	}
 
-	public int getFkCorso() {
-		return fkCorso;
+	public void setLink(String link) {
+		this.link = link;
 	}
 
+	public Corso getCorsoDiRiferimento() {
+		return corsoDiRiferimento;
+	}
+
+	public void setCorsoDiRiferimento(Corso corsoDiRiferimento) {
+		this.corsoDiRiferimento = corsoDiRiferimento;
+	}
 	
 }

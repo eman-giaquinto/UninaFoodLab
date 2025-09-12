@@ -8,12 +8,16 @@ import DatabaseException.DBExceptionUsernameNonTrovato;
 public interface ChefDAO {
 	/* LOGICA LOGIN */
 
+	Chef verificaAccesso(Chef chefDaVerificare) throws DBExceptionRisultatoIndefinito, 
+	DBExceptionUsernameNonTrovato, DBExceptionPasswordErrata;
+	
 	void verificaUsername (String username) throws DBExceptionUsernameNonTrovato, DBExceptionRisultatoIndefinito;
 	
 	void verificaPassword(String password) throws DBExceptionRisultatoIndefinito, DBExceptionPasswordErrata;
 	
-	void recuperoDati() throws DBExceptionRisultatoIndefinito;
+	String recuperoNomeChef() throws DBExceptionRisultatoIndefinito;
 	
-	Chef verificaAccesso(String username, String password) throws DBExceptionRisultatoIndefinito, 
-	DBExceptionUsernameNonTrovato, DBExceptionPasswordErrata;
+	String recuperoCognomeChef() throws DBExceptionRisultatoIndefinito;
+
+
 }

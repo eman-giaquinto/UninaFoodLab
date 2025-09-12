@@ -299,7 +299,7 @@ public class FinestraVisualizzaCorsi extends FinestraTemplate {
     
     public void richiestaVisualizzaCorsi(String filtro) {
     	try {
-			controller.richiestaConfermataVisualizzaCorsi(filtro);
+			controller.richiestaVisualizzaCorsiSchermo(filtro);
 		} catch (DBExceptionCorsiNonTrovati e) {
 			svuotaTabella();
 			if(filtro.equals("Tutti")) {

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import DAO.SessionePraticaDAO;
+import DTO.Corso;
 import DTO.SessionePratica;
 import Database.ComunicazioneDB;
 import DatabaseException.DBExceptionRisultatoIndefinito;
@@ -19,10 +20,12 @@ public class ImplementazioneSessionePraticaDAO implements SessionePraticaDAO{
 	 }
 
 	@Override
-	public ArrayList<SessionePratica> ottieniSessioniPratiche(int idCorsoRicavato)
+	public ArrayList<SessionePratica> ottieniSessioniPratiche(Corso corsoSelezionato)
 			throws DBExceptionRisultatoIndefinito, DBExceptionSessioniPraticheNonTrovate {
 		
 		ArrayList<SessionePratica> sessioniPratiche = new ArrayList<>();
+		
+		int idCorsoRicavato = corsoSelezionato.getIdCorso();
 
 	    String comando = "SELECT * FROM sessione_pratica "
 	    			   + "WHERE fkcorso =  "  + idCorsoRicavato + "";
@@ -42,12 +45,12 @@ public class ImplementazioneSessionePraticaDAO implements SessionePraticaDAO{
 	            
 	            // Crea un nuovo oggetto SessionePratica con i dati estratti
 	            SessionePratica tempSessionePratica = new SessionePratica(
-	            		risultato.getInt("idsessione_pratica"),
+	            		risultato.getInt("idsessionepratica"),
 	            		risultato.getInt("numeroadesioni"),
 	            		risultato.getDate("datasessione").toLocalDate(),
 	            		risultato.getTime("orarioinizio"),
 	            		risultato.getTime("orariofine"),
-	            		risultato.getInt("fkcorso"));
+	            		corsoSelezionato);
 	            
 	            // Aggiungi l'oggetto Sessione pratica alla lista
 	            sessioniPratiche.add(tempSessionePratica);

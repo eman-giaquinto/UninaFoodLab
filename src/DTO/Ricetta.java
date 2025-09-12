@@ -1,11 +1,17 @@
 package DTO;
 
+import java.util.ArrayList;
+
 public class Ricetta {
 	private String nome;
 	
 	private String descrizione;
 	
 	private GradoDifficoltà gradoDifficoltà;
+	
+	private ArrayList<SessionePratica> sessioniPratiche = new ArrayList<>();
+	
+	//private ArrayList<Ingrediente> ingredienti = new ArrayList<>();
 	
 	// Enum per il grado di difficoltà delle ricette
 	public enum GradoDifficoltà {
@@ -38,21 +44,42 @@ public class Ricetta {
 	}
 	
 	public Ricetta(String nome, String descrizione, GradoDifficoltà gradoDifficoltà) {
-		this.nome = nome;
-		this.descrizione = descrizione;
-		this.gradoDifficoltà = gradoDifficoltà;
+		this.setNome(nome);
+		this.setDescrizione(descrizione);
+		this.setGradoDifficoltà(gradoDifficoltà);
 	}
 
 	public String getNome() {
 		return nome;
 	}
 
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
 	public String getDescrizione() {
 		return descrizione;
+	}
+
+	public void setDescrizione(String descrizione) {
+		this.descrizione = descrizione;
 	}
 
 	public GradoDifficoltà getGradoDifficoltà() {
 		return gradoDifficoltà;
 	}
+
+	public void setGradoDifficoltà(GradoDifficoltà gradoDifficoltà) {
+		this.gradoDifficoltà = gradoDifficoltà;
+	}
+
+	public ArrayList<SessionePratica> getSessioniPratiche() {
+		return sessioniPratiche;
+	}
+
+	public void setSessioniPratiche(ArrayList<SessionePratica> sessioniPratiche) {
+		this.sessioniPratiche = sessioniPratiche;
+	}
+
 		
 }

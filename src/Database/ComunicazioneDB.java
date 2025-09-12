@@ -73,10 +73,10 @@ public class ComunicazioneDB {
 	
 	}
 	
-	public ResultSet numeroTuplaAggiunta() throws SQLException {
-	    risultato = statement.getGeneratedKeys();
-	    return risultato;
-	}
+//	public ResultSet numeroTuplaAggiunta() throws SQLException {
+//	    risultato = statement.getGeneratedKeys();
+//	    return risultato;
+//	}
 	
 	public void terminaConnessione() throws DBExceptionChiusuraConnessioneNonRiuscita{
 		/* Chiudo tutte le connessioni aperte con il database*/

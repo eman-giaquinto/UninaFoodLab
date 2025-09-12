@@ -16,15 +16,34 @@ public class ImplementazioneChefDAO implements ChefDAO {
 	
     private ResultSet risultato; 
     
-    private Chef chefAutenticato;
-
 	public ImplementazioneChefDAO(ComunicazioneDB comunicazioneDB) {
 		this.comunicazioneDB=comunicazioneDB;
 	}
 
 	@Override
+	public Chef verificaAccesso(Chef chefDaVerificare)
+			throws DBExceptionRisultatoIndefinito, DBExceptionUsernameNonTrovato, DBExceptionPasswordErrata {
+
+		String usernameChef = chefDaVerificare.getUsername();
+		
+		String passwordChef = chefDaVerificare.getPassword();
+
+		verificaUsername(usernameChef);
+				
+		verificaPassword(passwordChef);
+		
+		String nomeChef = recuperoNomeChef();
+
+		String cognomeChef = recuperoCognomeChef();
+
+	    Chef chefVerificato = new Chef(usernameChef,passwordChef,nomeChef,cognomeChef);
+
+		return chefVerificato;
+	}
+	
+	@Override
 	public void verificaUsername(String username) throws DBExceptionRisultatoIndefinito, DBExceptionUsernameNonTrovato {
-		String comando = "SELECT username, password, nome, cognome, descrizione FROM Chef "
+		String comando = "SELECT username, password, nome, cognome FROM Chef "
 					   + "WHERE ( username = '" + username + "');";
 		
 		try {
@@ -55,42 +74,29 @@ public class ImplementazioneChefDAO implements ChefDAO {
 	}
 
 	@Override
-	public void recuperoDati() throws DBExceptionRisultatoIndefinito {
-		String nomeChef;
-		String cognomeChef;
-		String descrizioneChef;
+	public String recuperoNomeChef() throws DBExceptionRisultatoIndefinito {
+		String nomeChefRecuperato;
 		
 		try {
-			nomeChef = risultato.getString("nome");
-			cognomeChef = risultato.getString("cognome");
-			descrizioneChef = risultato.getString("descrizione");
+			nomeChefRecuperato = risultato.getString("nome");
 		} catch (SQLException e) {
 			throw new DBExceptionRisultatoIndefinito();
 		}
 		
-		chefAutenticato.setNome(nomeChef);
-		chefAutenticato.setCognome(cognomeChef);
-		chefAutenticato.setDescrizione(descrizioneChef);
-		
+		return nomeChefRecuperato;
 	}
 
 	@Override
-	public Chef verificaAccesso(String username, String password)
-			throws DBExceptionRisultatoIndefinito, DBExceptionUsernameNonTrovato, DBExceptionPasswordErrata {
-
-		chefAutenticato = new Chef(null,null,null,null,null);
-
-		verificaUsername(username);
+	public String recuperoCognomeChef() throws DBExceptionRisultatoIndefinito {
+		String cognomeChefRecuperato;
 		
-		chefAutenticato.setUsername(username);
+		try {
+			cognomeChefRecuperato = risultato.getString("cognome");
+		} catch (SQLException e) {
+			throw new DBExceptionRisultatoIndefinito();
+		}
 		
-		verificaPassword(password);
-		
-		chefAutenticato.setPassword(password);
-		
-		recuperoDati();
-		
-		return chefAutenticato;
+		return cognomeChefRecuperato;
 	}
 
 }

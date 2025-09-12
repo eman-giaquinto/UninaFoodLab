@@ -1,5 +1,6 @@
 package Controller;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -12,6 +13,8 @@ import DAO.SessioneOnlineDAO;
 import DAO.SessionePraticaDAO;
 import DTO.Chef;
 import DTO.Corso;
+import DTO.Corso.FrequenzaSessione;
+import DTO.Corso.TipoCorso;
 import DTO.Ricetta;
 import DTO.SessioneOnline;
 import DTO.SessionePratica;
@@ -70,17 +73,15 @@ public class Controller {
 
 	
 	//DTO
-	private Chef chefLoggato;
+	private Chef chefAutenticato;
+	private Corso corsoScelto;
+	private SessionePratica sessionePraticaScelta;
+
+
 	
 	//Oggetti
-    private ArrayList<Corso> corsiVisualizzati;
     private DateTimeFormatter formatoDataItaliana = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    private int idCorsoSelezionato;
-    private ArrayList<SessionePratica> sessioniPraticheVisualizzate;
     private DateTimeFormatter formatoOraItaliana = DateTimeFormatter.ofPattern("HH:mm");
-    private int idSessionePraticaSelezionata;
-    private ArrayList<Ricetta> ricetteSessionePraticaVisualizzate;
-    private ArrayList<SessioneOnline> sessioniOnlineVisualizzate;
 
 
 
@@ -118,7 +119,9 @@ public class Controller {
 		}
 		
 		// Inizializzo i DTO		
-		chefLoggato = new Chef(null,null,null,null,null);
+		chefAutenticato = new Chef(null,null,null,null);
+		corsoScelto = new Corso(0,null,null,null,null,null);
+		sessionePraticaScelta = new SessionePratica(0,0,null,null,null,null);
 		
 		// Inizializzo i DAO
 		chefDAO = new ImplementazioneChefDAO(comunicazioneDB);
@@ -134,11 +137,13 @@ public class Controller {
 	public void accesso(String username, String password) throws DBExceptionRisultatoIndefinito,
 					DBExceptionUsernameNonTrovato, DBExceptionPasswordErrata {
 		
+		Chef chefDaVerificare = new Chef(username,password);
+		
 		// Richiamo il metodo per provare l' accesso con i dati inseriti
-		chefLoggato = chefDAO.verificaAccesso(username, password);
+		chefAutenticato = chefDAO.verificaAccesso(chefDaVerificare);
 		
 		/* Inizializzazione schermata principale*/
-		String nomecognomeChef = chefLoggato.getPresentazione();
+		String nomecognomeChef = chefAutenticato.getPresentazione();
 		
 		finestraMenuPrincipale.impostaChef(nomecognomeChef);
 		
@@ -161,11 +166,11 @@ public class Controller {
 		finestraVisualizzaCorsi.richiestaVisualizzaCorsi("Tutti");
 	}
 	
-	public void richiestaConfermataVisualizzaCorsi(String filtroScelto) throws DBExceptionRisultatoIndefinito,
+	public void richiestaVisualizzaCorsiSchermo(String filtroScelto) throws DBExceptionRisultatoIndefinito,
 	DBExceptionCorsiNonTrovati{
 		
-		String usernameChef = chefLoggato.getUsername();
-		corsiVisualizzati = corsoDAO.ottieniCorsi(usernameChef,filtroScelto);
+	    ArrayList<Corso> corsiVisualizzati = corsoDAO.ottieniCorsiChef(chefAutenticato,filtroScelto);
+	    chefAutenticato.setCorsiAssociati(corsiVisualizzati);
 		// Se non vengono rilanciate eccezioni allora procedo a stampare a schermo i corsi ricavati
 		stampaTabellaCorsi();
 	}
@@ -176,7 +181,7 @@ public class Controller {
 		int numeroCorso=1;
 		
 		// Per ogni corso aggiungo una tupla alla tabella dei corsi visualizzati a schermo 
-		for (Corso corso : corsiVisualizzati) {
+		for (Corso corso : chefAutenticato.getCorsiAssociati()) {
 			finestraVisualizzaCorsi.aggiungiTupla(
 					corso.getIdCorso(),
 	                numeroCorso++,
@@ -189,7 +194,7 @@ public class Controller {
 	}
 	
 	public String[] impostaDescrizioniTipiDiCorso() {
-		//Imposta l'elenco dei tipi di corsi per filtrare i corsi
+		//Imposta l'elenco dei tipi di corsi per filtrare i corsi dalla schermata di visualizzazione
 		String[] tipiDiCorso = Corso.ottieniDescrizioniTipiDiCorsi("Tutti");
 	    return tipiDiCorso;
 	}
@@ -197,7 +202,7 @@ public class Controller {
 	/* VISUALIZZA SCELTA TIPO DI SESSIONE */
 	
 	public void richiestaMostraSessioniCorsoSelezionato(int idCorsoRichiesto) {
-		idCorsoSelezionato=idCorsoRichiesto;
+		corsoScelto.setIdCorso(idCorsoRichiesto);
 	}
 	
 	public void showFinestraSceltaTipoDiSessione() {
@@ -218,10 +223,11 @@ public class Controller {
 		finestraVisualizzaSessioniPratiche.richiestaVisualizzaSessioniPratiche();
 	}
 	
-	public void richiestaConfermataVisualizzaSessioniPratiche() throws DBExceptionRisultatoIndefinito, 
+	public void richiestaVisualizzaSessioniPraticheSchermo() throws DBExceptionRisultatoIndefinito, 
 	DBExceptionSessioniPraticheNonTrovate{
 		
-		sessioniPraticheVisualizzate = sessionePraticaDAO.ottieniSessioniPratiche(idCorsoSelezionato);
+	    ArrayList<SessionePratica> sessioniPraticheVisualizzate = sessionePraticaDAO.ottieniSessioniPratiche(corsoScelto);
+	    corsoScelto.setSessioniPratiche(sessioniPraticheVisualizzate);
 		// Se non vengono rilanciate eccezioni allora procedo a stampare a schermo le sessioni pratiche ricavate
 		stampaTabellaSessioniPratiche();
 	}
@@ -231,23 +237,22 @@ public class Controller {
 	    
 		int numeroSessionePratica=1;
 		// Per ogni sessione pratica aggiungo una tupla alla tabella visualizzata a schermo 
-		for (SessionePratica sessionepratica : sessioniPraticheVisualizzate) {
+		for (SessionePratica sessionepratica : corsoScelto.getSessioniPratiche()) {
 			finestraVisualizzaSessioniPratiche.aggiungiTupla(
 					sessionepratica.getIdSessionePratica(),
 					numeroSessionePratica++,
 	                sessionepratica.getNumeroAdesioni(),
 	                sessionepratica.getDataSessione().format(formatoDataItaliana),
 	                sessionepratica.getOrarioInizio().toLocalTime().format(formatoOraItaliana),
-	                sessionepratica.getOrarioFine().toLocalTime().format(formatoOraItaliana),
-					sessionepratica.getFkCorso()
-	            );
+	                sessionepratica.getOrarioFine().toLocalTime().format(formatoOraItaliana)
+	                );
 		}
 	}
 	
 	/* VISUALIZZA RICETTE DELLE SESSIONI PRATICHE */
 	
 	public void richiestaMostraRicetteSessioneSelezionata(int idSessioneRichiesta) {
-		idSessionePraticaSelezionata=idSessioneRichiesta;
+		sessionePraticaScelta.setIdSessionePratica(idSessioneRichiesta);
 	}
 	
 	public void showFinestraVisualizzaRicetteSessionePratica() {
@@ -256,8 +261,11 @@ public class Controller {
 		finestraVisualizzaRicetteSessionePratica.richiestaVisualizzaRicette();
 	}
 	
-	public void richiestaConfermataVisualizzaRicette() throws DBExceptionRisultatoIndefinito, DBExceptionRicetteNonTrovate{
-		ricetteSessionePraticaVisualizzate = ricettaDAO.ottieniRicette(idSessionePraticaSelezionata);
+	public void richiestaVisualizzaRicetteSchermo() throws DBExceptionRisultatoIndefinito, DBExceptionRicetteNonTrovate{
+		
+		ArrayList<Ricetta> ricetteSessionePraticaVisualizzate; 
+		ricetteSessionePraticaVisualizzate = ricettaDAO.ottieniRicetteSessionePratica(sessionePraticaScelta);
+		sessionePraticaScelta.setRicetteAssociate(ricetteSessionePraticaVisualizzate);
 		// Se non vengono rilanciate eccezioni allora procedo a stampare a schermo le sessioni pratiche ricavate
 		stampaTabellaRicetteSessionePratica();
 	}
@@ -267,7 +275,7 @@ public class Controller {
 	    
 		int numeroRicettaSessionePratica=1;
 		// Per ogni ricetta aggiungo una tupla alla tabella visualizzata a schermo 
-		for (Ricetta ricette : ricetteSessionePraticaVisualizzate) {
+		for (Ricetta ricette : sessionePraticaScelta.getRicetteAssociate()) {
 			finestraVisualizzaRicetteSessionePratica.aggiungiTupla(
 					numeroRicettaSessionePratica++,
 					ricette.getNome(),
@@ -291,10 +299,10 @@ public class Controller {
 		finestraVisualizzaSessioniOnline.richiestaVisualizzaSessioniOnline();
 	}
 	
-	public void richiestaConfermataVisualizzaSessioniOnline() throws DBExceptionRisultatoIndefinito,
+	public void richiestaVisualizzaSessioniOnlineSchermo() throws DBExceptionRisultatoIndefinito,
 	DBExceptionSessioniOnlineNonTrovate  {
-		
-		sessioniOnlineVisualizzate = sessioneOnlineDAO.ottieniSessioniOnline(idCorsoSelezionato);
+	    ArrayList<SessioneOnline> sessioniOnlineVisualizzate = sessioneOnlineDAO.ottieniSessioniOnline(corsoScelto);
+	    corsoScelto.setSessioniOnline(sessioniOnlineVisualizzate);
 		// Se non vengono rilanciate eccezioni allora procedo a stampare a schermo le sessioni pratiche ricavate
 		stampaTabellaSessioniOnline();
 	}
@@ -304,7 +312,7 @@ public class Controller {
 		
 		int numeroSessioneOnline=1;
 		// Per ogni sessione online aggiungo una tupla alla tabella visualizzata a schermo 
-		for (SessioneOnline sessioneonline : sessioniOnlineVisualizzate) {
+		for (SessioneOnline sessioneonline : corsoScelto.getSessioniOnline()) {
 			finestraVisualizzaSessioniOnline.aggiungiTupla(
 					sessioneonline.getIdSessioneOnline(),
 					numeroSessioneOnline++,
@@ -312,8 +320,7 @@ public class Controller {
 					sessioneonline.getDataSessione().format(formatoDataItaliana),
 					sessioneonline.getOrarioInizio().toLocalTime().format(formatoOraItaliana),
 					sessioneonline.getOrarioFine().toLocalTime().format(formatoOraItaliana),
-					sessioneonline.getLink(),
-					sessioneonline.getFkCorso()
+					sessioneonline.getLink()
 	            );
 		}
 	}
@@ -339,30 +346,32 @@ public class Controller {
 	}
 	
 	public String[] getDescrizioniTipiDiCorso() {
+		//Imposta l'elenco dei tipi di corsi per la schermata di inserimento
 		String[] tipiDiCorso = Corso.ottieniDescrizioniTipiDiCorsi("Tutte");
 	    return tipiDiCorso;
 	}
 	
 	public String[] getDescrizioniFrequenzeSessioni() {
+		//Imposta l'elenco delle frequenze delle sessioni per la schermata di inserimento
 		String[] frquenzeSessioni = Corso.ottieniDescrizioniFrequenzeSessioni();
 	    return frquenzeSessioni;
 	}
 	
-	public void richiestaCreaCorso(String tipoDiCorsoInserito,String dataDiInizioInserita,String dataDiFineInserita,
-	String frequenzaSessioneInserita) throws DBExceptionOperazioneQueryDML,DBExceptionDataInizioMaggioreDataFine,
-	DBExceptionRisultatoIndefinito {
+	public void richiestaCreaCorso(String tipoDiCorsoInserito,LocalDate dataDiInizioInserita,LocalDate dataDiFineInserita,
+	String frequenzaSessioneInserita) throws DBExceptionOperazioneQueryDML,DBExceptionDataInizioMaggioreDataFine{
 		
-		int idCorsoCreato = corsoDAO.creaCorso(tipoDiCorsoInserito,dataDiInizioInserita,dataDiFineInserita,
-											   frequenzaSessioneInserita);
+		TipoCorso tipoDiCorso = TipoCorso.ottieniTipoDaDescrizione(tipoDiCorsoInserito);        
+        
+        FrequenzaSessione frequenzaSessione = FrequenzaSessione.ottieniTipoDaDescrizione(frequenzaSessioneInserita);        
+
+		Corso corsotemp = new Corso(tipoDiCorso, dataDiInizioInserita, frequenzaSessione, dataDiFineInserita, chefAutenticato);
 		
-		/* Se il corso è stato creato correttamente e non sono state rilanciate eccezioni,
-		 * lo vado a registrare nel database e ad associare allo chef loggato*/
-		
-		String usernameChef = chefLoggato.getUsername();
-		
-		corsoDAO.registraCorso(usernameChef,idCorsoCreato);
+		corsoDAO.creaCorso(corsotemp);
 		
 	}
+	
+	/* AGGIUNGI SESSIONE PRATICA - ONLINE E AGGIUNGI RICETTE ALLA SESSIONE PRATICA */
+
 	
 	
 }

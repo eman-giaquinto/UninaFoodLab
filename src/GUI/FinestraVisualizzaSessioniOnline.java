@@ -103,7 +103,7 @@ public class FinestraVisualizzaSessioniOnline extends FinestraTemplate {
 		
         modelloTabellaSessioneOnline = new DefaultTableModel(
                 new Object[][] {},
-                new String[] { "idSessioneOnline", "Sessione online n°", "Piattaforma", "Data sessione", "Orario inizio", "Orario fine", "Link", "fkCorso" }
+                new String[] { "idSessioneOnline", "Sessione online n°", "Piattaforma", "Data sessione", "Orario inizio", "Orario fine", "Link" }
             ) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
@@ -170,9 +170,7 @@ public class FinestraVisualizzaSessioniOnline extends FinestraTemplate {
         tableSessioniOnline.getColumnModel().getColumn(5).setPreferredWidth(25);
         tableSessioniOnline.getColumnModel().getColumn(5).setPreferredWidth(25);
         tableSessioniOnline.getColumnModel().getColumn(6).setPreferredWidth(125);
-        tableSessioniOnline.getColumnModel().getColumn(7).setPreferredWidth(1);
         
-        tableSessioniOnline.removeColumn(tableSessioniOnline.getColumnModel().getColumn(7));
         tableSessioniOnline.removeColumn(tableSessioniOnline.getColumnModel().getColumn(0)); 
         
         tableSessioniOnline.setFont(getFontCelle());
@@ -242,13 +240,13 @@ public class FinestraVisualizzaSessioniOnline extends FinestraTemplate {
         modelloTabellaSessioneOnline.setRowCount(0);
     }
     
-    public void aggiungiTupla(int idSessioneOnline, int numeroSessioneOnline, String piattaforma, String dataSessione, String orarioInizio, String orarioFine, String link, int fkCorso) {
-    	modelloTabellaSessioneOnline.addRow(new Object[] { idSessioneOnline, numeroSessioneOnline, piattaforma, dataSessione, orarioInizio, orarioFine, link, fkCorso });
+    public void aggiungiTupla(int idSessioneOnline, int numeroSessioneOnline, String piattaforma, String dataSessione, String orarioInizio, String orarioFine, String link) {
+    	modelloTabellaSessioneOnline.addRow(new Object[] { idSessioneOnline, numeroSessioneOnline, piattaforma, dataSessione, orarioInizio, orarioFine, link });
     }
     
     public void richiestaVisualizzaSessioniOnline() {
     	try {
-			controller.richiestaConfermataVisualizzaSessioniOnline();
+			controller.richiestaVisualizzaSessioniOnlineSchermo();
 		} catch (DBExceptionSessioniOnlineNonTrovate e) {
 			svuotaTabella();
 			messaggioWarningPopUp(e.getMessaggioWarningSchermo());	

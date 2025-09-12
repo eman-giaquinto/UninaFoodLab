@@ -240,7 +240,7 @@ public class FinestraVisualizzaRicetteSessionePratica extends FinestraTemplate {
     
     public void richiestaVisualizzaRicette() {
     	try {
-			controller.richiestaConfermataVisualizzaRicette();
+			controller.richiestaVisualizzaRicetteSchermo();
 		} catch (DBExceptionRicetteNonTrovate e) {
 			svuotaTabella();
 			messaggioWarningPopUp(e.getMessaggioWarningSchermo());	

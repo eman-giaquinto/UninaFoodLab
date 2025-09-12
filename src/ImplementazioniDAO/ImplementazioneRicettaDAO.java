@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import DAO.RicettaDAO;
 import DTO.Ricetta;
+import DTO.SessionePratica;
 import Database.ComunicazioneDB;
 import DatabaseException.DBExceptionRicetteNonTrovate;
 import DatabaseException.DBExceptionRisultatoIndefinito;
@@ -20,14 +21,16 @@ public class ImplementazioneRicettaDAO implements RicettaDAO{
 	 }
 	
 	@Override
-	public ArrayList<Ricetta> ottieniRicette(int idSessionePraticaRicavata) throws DBExceptionRisultatoIndefinito,
-			DBExceptionRicetteNonTrovate {
+	public ArrayList<Ricetta> ottieniRicetteSessionePratica(SessionePratica sessionePraticaSelezionata) 
+	throws DBExceptionRisultatoIndefinito,DBExceptionRicetteNonTrovate {
 		
 		ArrayList<Ricetta> ricetteSessionePratica = new ArrayList<>();
+		
+		int idSessionePraticaRicavata = sessionePraticaSelezionata.getIdSessionePratica();
 
 	    String comando = "SELECT nome,descrizione,gradodiff FROM ricetta "
-	    			   + "JOIN detiene ON FKNome_Ricetta = nome "
-	    			   + "WHERE FKSessione_Pratica =  "  + idSessionePraticaRicavata + "";
+	    			   + "JOIN detiene ON FKNomeRicetta = nome "
+	    			   + "WHERE FKSessionePratica =  "  + idSessionePraticaRicavata + "";
 	    	   
 
 	    // Mando il comando e prendo il risultato della query
@@ -55,7 +58,7 @@ public class ImplementazioneRicettaDAO implements RicettaDAO{
 	        }
 	    } catch (SQLException e) {
 	        // Errore durante l'accesso ai dati del ResultSet
-	        throw new DBExceptionRisultatoIndefinito();
+	       throw new DBExceptionRisultatoIndefinito();
 	    }
 	    
 	    return ricetteSessionePratica;

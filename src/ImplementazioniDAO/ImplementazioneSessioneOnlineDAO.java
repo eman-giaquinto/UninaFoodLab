@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import DAO.SessioneOnlineDAO;
+import DTO.Corso;
 import DTO.SessioneOnline;
 import Database.ComunicazioneDB;
 import DatabaseException.DBExceptionRisultatoIndefinito;
@@ -19,10 +20,12 @@ public class ImplementazioneSessioneOnlineDAO implements SessioneOnlineDAO {
 	 }
 
 	@Override
-	public ArrayList<SessioneOnline> ottieniSessioniOnline(int idCorsoRicavato)
+	public ArrayList<SessioneOnline> ottieniSessioniOnline(Corso corsoSelezionato)
 			throws DBExceptionRisultatoIndefinito, DBExceptionSessioniOnlineNonTrovate {
 		
 		ArrayList<SessioneOnline> sessioniOnline = new ArrayList<>();
+		
+		int idCorsoRicavato = corsoSelezionato.getIdCorso(); 
 
 	    String comando = "SELECT * FROM sessione_online "
 	    			   + "WHERE fkcorso =  "  + idCorsoRicavato + "";
@@ -42,13 +45,14 @@ public class ImplementazioneSessioneOnlineDAO implements SessioneOnlineDAO {
 	            
 	            // Crea un nuovo oggetto SessioneOnline con i dati estratti
 	        	SessioneOnline tempSessioneOnline = new SessioneOnline(
-	            		risultato.getInt("idsessione_online"),
+	            		risultato.getInt("idsessioneonline"),
 	            		SessioneOnline.Piattaforma.fromDescrizione(risultato.getString("piattaforma")),
 	            		risultato.getDate("datasessione").toLocalDate(),
 	            		risultato.getTime("orarioinizio"),
 	            		risultato.getTime("orariofine"),
 	            		risultato.getString("link"),
-	            		risultato.getInt("fkcorso"));
+	            		corsoSelezionato
+	            		);
 	            
 	            // Aggiungi l'oggetto Sessione online alla lista
 	        	sessioniOnline.add(tempSessioneOnline);

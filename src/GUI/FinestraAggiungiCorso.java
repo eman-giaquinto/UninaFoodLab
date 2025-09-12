@@ -243,9 +243,9 @@ public class FinestraAggiungiCorso extends FinestraTemplate {
 			    	
 	        		String valoreTipoDiCorso = recuperoTipoDiCorso(); 
 	        		
-	        		String valoreDataInizio = recuperoDataInizio(); 
+	        		LocalDate valoreDataInizio = recuperoDataInizio(); 
 
-	        		String valoreDataFine = recuperoDataFine();
+	        		LocalDate valoreDataFine = recuperoDataFine();
 	        		
 	        		String valoreFrequenzaSessione = recuperoFrequenzaSessione();
 	        		
@@ -280,8 +280,6 @@ public class FinestraAggiungiCorso extends FinestraTemplate {
 		    		messaggioWarningPopUp(err.getmessaggioWarningSchermo());	
 		    	} catch(DBExceptionOperazioneQueryDML err) {
 		    		messaggioErrorPopUp(err.getMessaggioErroreSchermo());
-		    	} catch(DBExceptionRisultatoIndefinito err) {
-		    		messaggioErrorPopUp(err.getMessaggioErrorSchermo());
 		    	}	
 			}
 		});
@@ -373,13 +371,13 @@ public class FinestraAggiungiCorso extends FinestraTemplate {
 	    return tipoDiCorsoSelezionato;
 	}
 	
-	private String recuperoDataInizio() {
-		String dataInizioInserita = datePickerDataInizio.getDateStringOrEmptyString();
+	private LocalDate recuperoDataInizio() {
+		LocalDate dataInizioInserita = datePickerDataInizio.getDate();
 		return dataInizioInserita; 
 	}
 	
-	private String recuperoDataFine() {
-		String dataFineInserita = datePickerDataFine.getDateStringOrEmptyString();
+	private LocalDate recuperoDataFine() {
+		LocalDate dataFineInserita = datePickerDataFine.getDate();
 		return dataFineInserita; 
 	}
 	
