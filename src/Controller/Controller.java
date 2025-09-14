@@ -1,6 +1,7 @@
 package Controller;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -23,18 +24,26 @@ import DatabaseException.DBExceptionConnessioneNonRiuscita;
 import DatabaseException.DBExceptionCorsiNonTrovati;
 import DatabaseException.DBExceptionCreazioneStatementFallita;
 import DatabaseException.DBExceptionDataInizioMaggioreDataFine;
+import DatabaseException.DBExceptionDataSessioneFuoriRange;
+import DatabaseException.DBExceptionDataSessioneOnlineDiversaMensile;
+import DatabaseException.DBExceptionDataSessioneOnlineDiversaSettimanale;
+import DatabaseException.DBExceptionDataSessionePraticaDiversaMensile;
 import DatabaseException.DBExceptionOperazioneQueryDML;
 import DatabaseException.DBExceptionPasswordErrata;
 import DatabaseException.DBExceptionRicetteNonTrovate;
 import DatabaseException.DBExceptionRisultatoIndefinito;
+import DatabaseException.DBExceptionSessioneOnlineDuplicata;
+import DatabaseException.DBExceptionSessionePraticaDuplicata;
 import DatabaseException.DBExceptionSessioniOnlineNonTrovate;
 import DatabaseException.DBExceptionSessioniPraticheNonTrovate;
 import DatabaseException.DBExceptionUsernameNonTrovato;
 import GUI.FinestraAggiungiCorso;
+import GUI.FinestraAggiungiSessionePratica;
 import GUI.FinestraLogin;
 import GUI.FinestraMenuPrincipale;
 import GUI.FinestraSceltaAggiungi;
 import GUI.FinestraSceltaTipoDiSessione;
+import GUI.FinestraSelezionaCorso;
 import GUI.FinestraVisualizzaCorsi;
 import GUI.FinestraVisualizzaRicetteSessionePratica;
 import GUI.FinestraVisualizzaSessioniOnline;
@@ -59,6 +68,9 @@ public class Controller {
 	private FinestraSceltaAggiungi finestraSceltaAggiungi;
 	private FinestraVisualizzaSessioniOnline finestraVisualizzaSessioniOnline;
 	private FinestraAggiungiCorso finestraAggiungiCorso;
+	private FinestraSelezionaCorso finestraSelezionaCorso;
+	private FinestraAggiungiSessionePratica finestraAggiungiSessionePratica;
+
 
 
 	
@@ -90,6 +102,11 @@ public class Controller {
 
 	public static void main(String[] args) {
 		Controller c = new Controller();
+		
+		// aggiungere un metodo per far si che la java swing giri su un thread 
+		
+		// aggiungere un metodo per chiudere la connessione al db
+		
 	}
 	
 	public Controller() {
@@ -104,6 +121,10 @@ public class Controller {
 		finestraSceltaAggiungi = new FinestraSceltaAggiungi(this);
 		finestraVisualizzaSessioniOnline = new FinestraVisualizzaSessioniOnline(this);
 		finestraAggiungiCorso = new FinestraAggiungiCorso(this);
+		finestraSelezionaCorso = new FinestraSelezionaCorso(this);
+		finestraAggiungiSessionePratica = new FinestraAggiungiSessionePratica(this);
+
+
 
 
 
@@ -243,8 +264,8 @@ public class Controller {
 					numeroSessionePratica++,
 	                sessionepratica.getNumeroAdesioni(),
 	                sessionepratica.getDataSessione().format(formatoDataItaliana),
-	                sessionepratica.getOrarioInizio().toLocalTime().format(formatoOraItaliana),
-	                sessionepratica.getOrarioFine().toLocalTime().format(formatoOraItaliana)
+	                sessionepratica.getOrarioInizio().format(formatoOraItaliana),
+	                sessionepratica.getOrarioFine().format(formatoOraItaliana)
 	                );
 		}
 	}
@@ -371,7 +392,118 @@ public class Controller {
 	}
 	
 	/* AGGIUNGI SESSIONE PRATICA - ONLINE E AGGIUNGI RICETTE ALLA SESSIONE PRATICA */
+	
+	public void showFinestraSelezionaCorso(String modalitàAccesso){
+		
+		switch(modalitàAccesso){
+			case "pratica":
+			finestraSelezionaCorso.setModalitàAccesso(modalitàAccesso);
+			break;
+			case "online":
+			finestraSelezionaCorso.setModalitàAccesso(modalitàAccesso);
+			break;
+			case "ricetta":
+			finestraSelezionaCorso.setModalitàAccesso(modalitàAccesso);
+			break;
+		}
+		
+		finestraSelezionaCorso.setFiltriTipiDiCorso();
+		finestraSelezionaCorso.richiestaSelezionaCorso("Tutti");
+		finestraSelezionaCorso.setVisible(true);
+		finestraSceltaAggiungi.setVisible(false);
+	}
+	
+	public void richiestaSelezionaCorsoAggiungi(String filtroScelto) throws DBExceptionRisultatoIndefinito,
+	DBExceptionCorsiNonTrovati{
+		
+	    ArrayList<Corso> corsiVisualizzati = corsoDAO.ottieniCorsiChef(chefAutenticato,filtroScelto);
+	    chefAutenticato.setCorsiAssociati(corsiVisualizzati);
+		// Se non vengono rilanciate eccezioni allora procedo a stampare a schermo i corsi ricavati
+		stampaTabellaSelezionaCorso();
+	}
+	
+	private void stampaTabellaSelezionaCorso() {
+		finestraSelezionaCorso.svuotaTabella();
+			    
+		int numeroCorso=1;
+		
+		// Per ogni corso aggiungo una tupla alla tabella dei corsi visualizzati a schermo 
+		for (Corso corso : chefAutenticato.getCorsiAssociati()) {
+			finestraSelezionaCorso.aggiungiTupla(
+					corso.getIdCorso(),
+	                numeroCorso++,
+	                corso.getTipoDiCorso().getDescrizione(), 
+	                corso.getDataInizio().format(formatoDataItaliana), 
+	                corso.getFrequenzaSessione().getDescrizione(), 
+	                corso.getDataFine().format(formatoDataItaliana)
+	            );
+		}
+	}
+	
+	public void impostaCorsoSelezionato(int idCorsoRichiesto) {
+		corsoScelto.setIdCorso(idCorsoRichiesto);
+	}
+	
+	public void showFinestraAggiungiSessionePratica(){
+		getRangeDateCorsoScelto();
+		
+	    LocalDate dataInizioCorsoSelezionato = corsoScelto.getDataInizio();
+	    LocalDate dataFineCorsoSelezionato = corsoScelto.getDataFine();
+	    String frequenzaSessioneCorsoSelezionato = corsoScelto.getFrequenzaSessione().getDescrizione();
+		
+		
+		finestraAggiungiSessionePratica.setRangeDataSessionePratica(dataInizioCorsoSelezionato,dataFineCorsoSelezionato,
+																	frequenzaSessioneCorsoSelezionato);
+		finestraAggiungiSessionePratica.setCampiInserimento();
+		finestraAggiungiSessionePratica.setVisible(true);
+		finestraSelezionaCorso.setVisible(false);
+	}
+	
+	private void getRangeDateCorsoScelto() {
+		for (Corso corso : chefAutenticato.getCorsiAssociati()) {
+			if(corso.getIdCorso()==corsoScelto.getIdCorso()) {
+				corsoScelto.setDataInizio(corso.getDataInizio());
+				corsoScelto.setDataFine(corso.getDataFine());
+				corsoScelto.setFrequenzaSessione(corso.getFrequenzaSessione());
+			}
+		}
+	}
+	
+	public void richiestaCreaSessionePratica(LocalDate dataSessioneInserita,LocalTime orarioInizioInserito,
+	LocalTime orarioFineInserito,int numeroAdesioniInserito) throws DBExceptionOperazioneQueryDML, 
+	DBExceptionDataSessioneFuoriRange,DBExceptionSessionePraticaDuplicata, DBExceptionDataSessionePraticaDiversaMensile{
 
+		SessionePratica sessionePraticaTemp = new SessionePratica(
+				numeroAdesioniInserito, dataSessioneInserita, orarioInizioInserito, orarioFineInserito, corsoScelto);
+				
+		sessionePraticaDAO.creaSessionePratica(sessionePraticaTemp);
+	}
+	
+	public void backToSelezionaCorso(JFrame finestra) {
+		finestraSelezionaCorso.setVisible(true);
+		finestra.setVisible(false);
+	}
+	
+	/* AGGIUNGI SESSIONE ONLINE PARTE AGGIUNTIVA */
+//	public void showFinestraAggiungiSessioneOnline(){
+//		getRangeDateCorsoScelto();
+//		finestraAggiungiSessioneOnline.setRangeDataSessionePratica(dataInizioCorsoSelezionato,dataFineCorsoSelezionato,
+//																	frequenzaSessioneCorsoSelezionato);
+//		finestraAggiungiSessioneOnline.setCampiInserimento();
+//		finestraAggiungiSessioneOnline.setVisible(true);
+//		finestraSelezionaCorso.setVisible(false);
+//	}
+//	
+//	public String[] getDescrizioniTipiDiPiattaforma() {
+//		String[] tipiDiPiattaforma = SessioneOnline.ottieniDescrizioniPiattaforme();
+//	    return tipiDiPiattaforma;
+//	}
+//	
+//	public void richiestaCreaSessioneOnline(String dataSessioneInserita,String orarioInizioInserito,String orarioFineInserito,
+//			String piattaformaInserita,String linkInserito) throws DBExceptionOperazioneQueryDML,DBExceptionSessioneOnlineDuplicata,
+//			DBExceptionDataSessioneOnlineDiversaSettimanale,DBExceptionDataSessioneOnlineDiversaMensile, DBExceptionSessioneOnlineLinkDuplicato{
+//		sessioneOnlineDAO.creaSessioneOnline(piattaformaInserita, dataSessioneInserita, orarioInizioInserito, orarioFineInserito, linkInserito, idCorsoSelezionato);
+//	}
 	
 	
 }

@@ -66,17 +66,12 @@ public class ComunicazioneDB {
 	
 	public int mandaQueryDML(String comando) throws SQLException {
 		
-		esitoPositivo = statement.executeUpdate(comando,Statement.RETURN_GENERATED_KEYS);
+		esitoPositivo = statement.executeUpdate(comando);
 		
 		// Se non vengono rilanciate eccezioni allora abbiamo avuto un esito positivo dell' operazione
 		return esitoPositivo;
 	
 	}
-	
-//	public ResultSet numeroTuplaAggiunta() throws SQLException {
-//	    risultato = statement.getGeneratedKeys();
-//	    return risultato;
-//	}
 	
 	public void terminaConnessione() throws DBExceptionChiusuraConnessioneNonRiuscita{
 		/* Chiudo tutte le connessioni aperte con il database*/

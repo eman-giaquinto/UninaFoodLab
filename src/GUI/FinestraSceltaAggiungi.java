@@ -135,7 +135,7 @@ public class FinestraSceltaAggiungi extends FinestraTemplate {
 		btnAggiungiSessioniPraticheCorso = new JButton("<html><center>Aggiungi sessioni<br>pratiche al corso</center></html>");
 		btnAggiungiSessioniPraticheCorso.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//		    	controller.showFinestraSelezionaCorso("pratica");
+		    	controller.showFinestraSelezionaCorso("pratica");
 			}
 		});
 		

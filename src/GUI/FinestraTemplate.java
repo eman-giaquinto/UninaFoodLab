@@ -56,6 +56,21 @@ public class FinestraTemplate extends JFrame {
     	JOptionPane.showMessageDialog(this,testo,"Errore",JOptionPane.ERROR_MESSAGE);
 	}
     
+    public int messaggioSceltaPopUp(String messaggioSchermo) {
+        String[] opzioni = {"Sì", "No"};
+    	 int scelta = JOptionPane.showOptionDialog(
+                 this,                                     
+                 messaggioSchermo, 
+                 "Scegli un opzione",                         
+                 JOptionPane.YES_NO_OPTION,                 
+                 JOptionPane.QUESTION_MESSAGE,              
+                 null,                                     
+                 opzioni,                                  
+                 null                                       
+         );
+    	return scelta; 
+    }
+    
     // Logo
     protected ImageIcon getLogoVisualizzato() {
         return logoVisualizzato;

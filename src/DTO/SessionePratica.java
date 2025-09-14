@@ -13,18 +13,28 @@ public class SessionePratica {
 	
 	private LocalDate dataSessione;
 	
-	private Time orarioInizio;
+	private LocalTime orarioInizio;
 	
-	private Time orarioFine;
+	private LocalTime orarioFine;
 	
 	private Corso corsoDiRiferimento;
 	
 	private ArrayList<Ricetta> ricetteAssociate = new ArrayList<>();
 	
 	// Costruttore per il recupero delle sessioni pratiche
-	public SessionePratica(int idSessionePratica, int numeroAdesioni, LocalDate dataSessione, Time orarioInizio,
-			Time orarioFine,Corso corsoDiRiferimento) {
+	public SessionePratica(int idSessionePratica, int numeroAdesioni, LocalDate dataSessione, LocalTime orarioInizio,
+			LocalTime orarioFine,Corso corsoDiRiferimento) {
 		this.idSessionePratica = idSessionePratica;
+		this.numeroAdesioni = numeroAdesioni;
+		this.dataSessione = dataSessione;
+		this.orarioInizio = orarioInizio;
+		this.orarioFine = orarioFine;
+		this.corsoDiRiferimento=corsoDiRiferimento;
+	}
+	
+	// Costruttore per per l'inserimento delle sessioni pratiche
+	public SessionePratica(int numeroAdesioni, LocalDate dataSessione, LocalTime orarioInizio,LocalTime orarioFine,
+			Corso corsoDiRiferimento) {
 		this.numeroAdesioni = numeroAdesioni;
 		this.dataSessione = dataSessione;
 		this.orarioInizio = orarioInizio;
@@ -56,19 +66,19 @@ public class SessionePratica {
 		this.dataSessione = dataSessione;
 	}
 
-	public Time getOrarioInizio() {
+	public LocalTime getOrarioInizio() {
 		return orarioInizio;
 	}
 
-	public void setOrarioInizio(Time orarioInizio) {
+	public void setOrarioInizio(LocalTime orarioInizio) {
 		this.orarioInizio = orarioInizio;
 	}
 
-	public Time getOrarioFine() {
+	public LocalTime getOrarioFine() {
 		return orarioFine;
 	}
 
-	public void setOrarioFine(Time orarioFine) {
+	public void setOrarioFine(LocalTime orarioFine) {
 		this.orarioFine = orarioFine;
 	}
 
