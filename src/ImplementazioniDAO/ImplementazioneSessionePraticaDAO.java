@@ -53,15 +53,20 @@ public class ImplementazioneSessionePraticaDAO implements SessionePraticaDAO{
 
 	        // Itera su tutte le righe restituite dalla query
 	        while (comunicazioneDB.prossimaTupla()) {
-	            
+	        	
+	        	int idSessionePratica = risultato.getInt("idsessionepratica");
+	        	
+	        	int numeroAdesioni = risultato.getInt("numeroadesioni");
+	        	
+	            LocalDate dataSessione = risultato.getDate("datasessione").toLocalDate();
+
+	        	LocalTime orarioInizio = risultato.getTime("orarioinizio").toLocalTime();
+	        	
+	        	LocalTime orarioFine = risultato.getTime("orariofine").toLocalTime();
+
 	            // Crea un nuovo oggetto SessionePratica con i dati estratti
 	            SessionePratica tempSessionePratica = new SessionePratica(
-	            		risultato.getInt("idsessionepratica"),
-	            		risultato.getInt("numeroadesioni"),
-	            		risultato.getDate("datasessione").toLocalDate(),
-	            		risultato.getTime("orarioinizio").toLocalTime(),
-	            		risultato.getTime("orariofine").toLocalTime(),
-	            		corsoSelezionato);
+	            		idSessionePratica,numeroAdesioni,dataSessione,orarioInizio,orarioFine,corsoSelezionato);
 	            
 	            // Aggiungi l'oggetto Sessione pratica alla lista
 	            sessioniPratiche.add(tempSessionePratica);
@@ -71,6 +76,7 @@ public class ImplementazioneSessionePraticaDAO implements SessionePraticaDAO{
 	        throw new DBExceptionRisultatoIndefinito();
 	    } 
 	    
+	   
 	    return sessioniPratiche;
 	}
 

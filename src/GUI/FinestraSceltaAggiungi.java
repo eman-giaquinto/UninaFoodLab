@@ -193,7 +193,7 @@ public class FinestraSceltaAggiungi extends FinestraTemplate {
 		
 		btnAggiungiSessioniOnlineCorso.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//		    	controller.showFinestraSelezionaCorso("online");
+		    	controller.showFinestraSelezionaCorso("online");
 			}
 		});
 		

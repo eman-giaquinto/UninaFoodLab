@@ -18,6 +18,7 @@ import DTO.Corso.FrequenzaSessione;
 import DTO.Corso.TipoCorso;
 import DTO.Ricetta;
 import DTO.SessioneOnline;
+import DTO.SessioneOnline.Piattaforma;
 import DTO.SessionePratica;
 import Database.ComunicazioneDB;
 import DatabaseException.DBExceptionConnessioneNonRiuscita;
@@ -33,11 +34,13 @@ import DatabaseException.DBExceptionPasswordErrata;
 import DatabaseException.DBExceptionRicetteNonTrovate;
 import DatabaseException.DBExceptionRisultatoIndefinito;
 import DatabaseException.DBExceptionSessioneOnlineDuplicata;
+import DatabaseException.DBExceptionSessioneOnlineLinkDuplicato;
 import DatabaseException.DBExceptionSessionePraticaDuplicata;
 import DatabaseException.DBExceptionSessioniOnlineNonTrovate;
 import DatabaseException.DBExceptionSessioniPraticheNonTrovate;
 import DatabaseException.DBExceptionUsernameNonTrovato;
 import GUI.FinestraAggiungiCorso;
+import GUI.FinestraAggiungiSessioneOnline;
 import GUI.FinestraAggiungiSessionePratica;
 import GUI.FinestraLogin;
 import GUI.FinestraMenuPrincipale;
@@ -70,6 +73,8 @@ public class Controller {
 	private FinestraAggiungiCorso finestraAggiungiCorso;
 	private FinestraSelezionaCorso finestraSelezionaCorso;
 	private FinestraAggiungiSessionePratica finestraAggiungiSessionePratica;
+	private FinestraAggiungiSessioneOnline finestraAggiungiSessioneOnline;
+
 
 
 
@@ -123,6 +128,8 @@ public class Controller {
 		finestraAggiungiCorso = new FinestraAggiungiCorso(this);
 		finestraSelezionaCorso = new FinestraSelezionaCorso(this);
 		finestraAggiungiSessionePratica = new FinestraAggiungiSessionePratica(this);
+		finestraAggiungiSessioneOnline = new FinestraAggiungiSessioneOnline(this);
+
 
 
 
@@ -339,8 +346,8 @@ public class Controller {
 					numeroSessioneOnline++,
 					sessioneonline.getPiattaforma().getDescrizione(),
 					sessioneonline.getDataSessione().format(formatoDataItaliana),
-					sessioneonline.getOrarioInizio().toLocalTime().format(formatoOraItaliana),
-					sessioneonline.getOrarioFine().toLocalTime().format(formatoOraItaliana),
+					sessioneonline.getOrarioInizio().format(formatoOraItaliana),
+					sessioneonline.getOrarioFine().format(formatoOraItaliana),
 					sessioneonline.getLink()
 	            );
 		}
@@ -381,9 +388,9 @@ public class Controller {
 	public void richiestaCreaCorso(String tipoDiCorsoInserito,LocalDate dataDiInizioInserita,LocalDate dataDiFineInserita,
 	String frequenzaSessioneInserita) throws DBExceptionOperazioneQueryDML,DBExceptionDataInizioMaggioreDataFine{
 		
-		TipoCorso tipoDiCorso = TipoCorso.ottieniTipoDaDescrizione(tipoDiCorsoInserito);        
+		TipoCorso tipoDiCorso = TipoCorso.ottieniTipoDiCorsoFormattato(tipoDiCorsoInserito);        
         
-        FrequenzaSessione frequenzaSessione = FrequenzaSessione.ottieniTipoDaDescrizione(frequenzaSessioneInserita);        
+        FrequenzaSessione frequenzaSessione = FrequenzaSessione.ottieniFrequenzaSessioneFormattata(frequenzaSessioneInserita);        
 
 		Corso corsotemp = new Corso(tipoDiCorso, dataDiInizioInserita, frequenzaSessione, dataDiFineInserita, chefAutenticato);
 		
@@ -485,25 +492,37 @@ public class Controller {
 	}
 	
 	/* AGGIUNGI SESSIONE ONLINE PARTE AGGIUNTIVA */
-//	public void showFinestraAggiungiSessioneOnline(){
-//		getRangeDateCorsoScelto();
-//		finestraAggiungiSessioneOnline.setRangeDataSessionePratica(dataInizioCorsoSelezionato,dataFineCorsoSelezionato,
-//																	frequenzaSessioneCorsoSelezionato);
-//		finestraAggiungiSessioneOnline.setCampiInserimento();
-//		finestraAggiungiSessioneOnline.setVisible(true);
-//		finestraSelezionaCorso.setVisible(false);
-//	}
-//	
-//	public String[] getDescrizioniTipiDiPiattaforma() {
-//		String[] tipiDiPiattaforma = SessioneOnline.ottieniDescrizioniPiattaforme();
-//	    return tipiDiPiattaforma;
-//	}
-//	
-//	public void richiestaCreaSessioneOnline(String dataSessioneInserita,String orarioInizioInserito,String orarioFineInserito,
-//			String piattaformaInserita,String linkInserito) throws DBExceptionOperazioneQueryDML,DBExceptionSessioneOnlineDuplicata,
-//			DBExceptionDataSessioneOnlineDiversaSettimanale,DBExceptionDataSessioneOnlineDiversaMensile, DBExceptionSessioneOnlineLinkDuplicato{
-//		sessioneOnlineDAO.creaSessioneOnline(piattaformaInserita, dataSessioneInserita, orarioInizioInserito, orarioFineInserito, linkInserito, idCorsoSelezionato);
-//	}
+	public void showFinestraAggiungiSessioneOnline(){
+		getRangeDateCorsoScelto();
+		
+		LocalDate dataInizioCorsoSelezionato = corsoScelto.getDataInizio();
+	    LocalDate dataFineCorsoSelezionato = corsoScelto.getDataFine();
+	    String frequenzaSessioneCorsoSelezionato = corsoScelto.getFrequenzaSessione().getDescrizione();
+	    
+		finestraAggiungiSessioneOnline.setRangeDataSessionePratica(dataInizioCorsoSelezionato,dataFineCorsoSelezionato,
+																	frequenzaSessioneCorsoSelezionato);
+		finestraAggiungiSessioneOnline.setCampiInserimento();
+		finestraAggiungiSessioneOnline.setVisible(true);
+		finestraSelezionaCorso.setVisible(false);
+	}
+	
+	public String[] getDescrizioniTipiDiPiattaforma() {
+		String[] tipiDiPiattaforma = SessioneOnline.ottieniDescrizioniPiattaforme();
+	    return tipiDiPiattaforma;
+	}
+	
+	public void richiestaCreaSessioneOnline(LocalDate dataSessioneInserita,LocalTime orarioInizioInserito,
+	LocalTime orarioFineInserito, String piattaformaInserita,String linkInserito) throws DBExceptionOperazioneQueryDML,
+	DBExceptionSessioneOnlineDuplicata, DBExceptionDataSessioneOnlineDiversaSettimanale,
+	DBExceptionDataSessioneOnlineDiversaMensile,DBExceptionSessioneOnlineLinkDuplicato{
+		
+		Piattaforma piattaformaRicavata = Piattaforma.ottieniPiattaformaFormattata(piattaformaInserita);        
+		
+		SessioneOnline sessioneOnlineDaAggiungere = new SessioneOnline(
+				piattaformaRicavata, dataSessioneInserita, orarioInizioInserito, orarioFineInserito, linkInserito, corsoScelto);
+		
+		sessioneOnlineDAO.creaSessioneOnline(sessioneOnlineDaAggiungere);
+	}
 	
 	
 }

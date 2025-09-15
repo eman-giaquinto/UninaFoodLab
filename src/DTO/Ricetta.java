@@ -32,7 +32,7 @@ public class Ricetta {
         }
         
         // Questo metodo deve essere pubblico per essere chiamato dall'esterno
-        public static GradoDifficoltà fromDescrizione(String descrizione) {
+        public static GradoDifficoltà ottieniGradoDiDifficoltàFormattata(String descrizione) {
             for (GradoDifficoltà tipo : GradoDifficoltà.values()) {
                 if (tipo.descrizione.equalsIgnoreCase(descrizione)) {
                     return tipo;
@@ -44,9 +44,9 @@ public class Ricetta {
 	}
 	
 	public Ricetta(String nome, String descrizione, GradoDifficoltà gradoDifficoltà) {
-		this.setNome(nome);
-		this.setDescrizione(descrizione);
-		this.setGradoDifficoltà(gradoDifficoltà);
+		this.nome=nome;
+		this.descrizione=descrizione;
+		this.gradoDifficoltà=gradoDifficoltà;
 	}
 
 	public String getNome() {

@@ -48,7 +48,7 @@ public class Corso {
         }
         
         // Metodo pubblico e statico per essere chiamato dall' esterno
-        public static TipoCorso ottieniTipoDaDescrizione(String descrizione) {
+        public static TipoCorso ottieniTipoDiCorsoFormattato(String descrizione) {
             for (TipoCorso tipo : TipoCorso.values()) {
                 if (tipo.descrizione.equalsIgnoreCase(descrizione)) {
                     return tipo;
@@ -78,7 +78,7 @@ public class Corso {
         }
         
         // Metodo pubblico e statico per essere chiamato dall' esterno
-        public static FrequenzaSessione ottieniTipoDaDescrizione(String descrizione) {
+        public static FrequenzaSessione ottieniFrequenzaSessioneFormattata(String descrizione) {
             for (FrequenzaSessione freq : FrequenzaSessione.values()) {
                 if (freq.descrizione.equalsIgnoreCase(descrizione)) {
                     return freq;

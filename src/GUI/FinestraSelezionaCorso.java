@@ -148,7 +148,7 @@ public class FinestraSelezionaCorso extends FinestraTemplate {
 	                        controller.showFinestraAggiungiSessionePratica();
 	            			break;
 	            			case "online":
-//		                    controller.showFinestraAggiungiSessioneOnline();
+		                    controller.showFinestraAggiungiSessioneOnline();
 	            			break;
 	            			case "ricetta":
 //			                controller.showFinestraSelezionaSessionePratica();

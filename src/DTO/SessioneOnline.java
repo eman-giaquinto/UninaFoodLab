@@ -12,9 +12,9 @@ public class SessioneOnline {
 	
 	private LocalDate dataSessione;
 	
-	private Time orarioInizio;
+	private LocalTime orarioInizio;
 	
-	private Time orarioFine;
+	private LocalTime orarioFine;
 	
 	private String link;
 	
@@ -40,7 +40,7 @@ public class SessioneOnline {
         }
         
         // Metodo pubblico e statico per essere chiamato dall' esterno
-        public static Piattaforma fromDescrizione(String descrizione) {
+        public static Piattaforma ottieniPiattaformaFormattata(String descrizione) {
             for (Piattaforma tipo : Piattaforma.values()) {
                 if (tipo.descrizione.equalsIgnoreCase(descrizione)) {
                     return tipo;
@@ -51,9 +51,20 @@ public class SessioneOnline {
 	}
 	
 	// Costruttore per il recupero delle sessioni online
-	public SessioneOnline(int idSessioneOnline, Piattaforma piattaforma, LocalDate dataSessione, Time orarioInizio,
-			Time orarioFine, String link,Corso corsoDiRiferimento) {
+	public SessioneOnline(int idSessioneOnline, Piattaforma piattaforma, LocalDate dataSessione, LocalTime orarioInizio,
+			LocalTime orarioFine, String link,Corso corsoDiRiferimento) {
 		this.idSessioneOnline=idSessioneOnline;
+		this.piattaforma=piattaforma;
+		this.dataSessione=dataSessione;
+		this.orarioInizio=orarioInizio;
+		this.orarioFine=orarioFine;
+		this.link=link;
+		this.corsoDiRiferimento=corsoDiRiferimento;
+	}
+	
+	// Costruttore per l' inserimento delle sessioni online
+	public SessioneOnline(Piattaforma piattaforma, LocalDate dataSessione, LocalTime orarioInizio,
+			LocalTime orarioFine, String link,Corso corsoDiRiferimento) {
 		this.piattaforma=piattaforma;
 		this.dataSessione=dataSessione;
 		this.orarioInizio=orarioInizio;
@@ -86,19 +97,19 @@ public class SessioneOnline {
 		this.dataSessione = dataSessione;
 	}
 
-	public Time getOrarioInizio() {
+	public LocalTime getOrarioInizio() {
 		return orarioInizio;
 	}
 
-	public void setOrarioInizio(Time orarioInizio) {
+	public void setOrarioInizio(LocalTime orarioInizio) {
 		this.orarioInizio = orarioInizio;
 	}
 
-	public Time getOrarioFine() {
+	public LocalTime getOrarioFine() {
 		return orarioFine;
 	}
 
-	public void setOrarioFine(Time orarioFine) {
+	public void setOrarioFine(LocalTime orarioFine) {
 		this.orarioFine = orarioFine;
 	}
 
@@ -117,5 +128,19 @@ public class SessioneOnline {
 	public void setCorsoDiRiferimento(Corso corsoDiRiferimento) {
 		this.corsoDiRiferimento = corsoDiRiferimento;
 	}
+	
+	public static String[] ottieniDescrizioniPiattaforme() {
+		Piattaforma[] tuttiITipi = Piattaforma.values();
+        
+        String[] descrizioniPiattaforme;
+     
+        descrizioniPiattaforme = new String[tuttiITipi.length];
+            
+            for (int i = 0; i < tuttiITipi.length; i++) {
+            	descrizioniPiattaforme[i] = tuttiITipi[i].getDescrizione();
+            }
+   
+        return descrizioniPiattaforme;
+    }
 	
 }

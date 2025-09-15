@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import DAO.RicettaDAO;
 import DTO.Ricetta;
+import DTO.Ricetta.GradoDifficoltà;
 import DTO.SessionePratica;
 import Database.ComunicazioneDB;
 import DatabaseException.DBExceptionRicetteNonTrovate;
@@ -46,12 +47,14 @@ public class ImplementazioneRicettaDAO implements RicettaDAO{
 	        // Itera su tutte le righe restituite dalla query
 	        while (comunicaDatabase.prossimaTupla()) {
 	            
+	        	String nome = risultato.getString("nome");
+	        	
+	        	String descrizione = risultato.getString("descrizione");
+	        	
+	        	GradoDifficoltà gradoDifficoltà = GradoDifficoltà.ottieniGradoDiDifficoltàFormattata(risultato.getString("gradodiff"));
+	        	
 	            // Crea un nuovo oggetto Ricetta con i dati estratti
-	        	Ricetta tempRicetta = new Ricetta(
-	            		risultato.getString("nome"),
-	            		risultato.getString("descrizione"),
-	            		Ricetta.GradoDifficoltà.fromDescrizione(risultato.getString("gradodiff"))
-	            		);
+	        	Ricetta tempRicetta = new Ricetta(nome,descrizione,gradoDifficoltà);
 	            
 	            // Aggiungi l'oggetto Ricetta alla lista
 	            ricetteSessionePratica.add(tempRicetta);

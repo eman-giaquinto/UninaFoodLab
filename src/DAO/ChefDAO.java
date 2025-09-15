@@ -6,8 +6,9 @@ import DatabaseException.DBExceptionRisultatoIndefinito;
 import DatabaseException.DBExceptionUsernameNonTrovato;
 
 public interface ChefDAO {
+	
 	/* LOGICA LOGIN */
-
+	
 	Chef verificaAccesso(Chef chefDaVerificare) throws DBExceptionRisultatoIndefinito, 
 	DBExceptionUsernameNonTrovato, DBExceptionPasswordErrata;
 	

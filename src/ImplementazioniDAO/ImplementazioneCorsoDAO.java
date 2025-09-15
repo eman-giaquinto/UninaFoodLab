@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import DAO.CorsoDAO;
 import DTO.Chef;
 import DTO.Corso;
+import DTO.Corso.FrequenzaSessione;
+import DTO.Corso.TipoCorso;
 import Database.ComunicazioneDB;
 import DatabaseException.DBExceptionCorsiNonTrovati;
 import DatabaseException.DBExceptionDataInizioMaggioreDataFine;
@@ -51,21 +53,25 @@ public class ImplementazioneCorsoDAO implements CorsoDAO{
 	        }
 	        
 	    	while (comunicazioneDB.prossimaTupla()) {
+	    		
+	    		int idCorso = risultato.getInt("IDCorso");
+	    		
+	    		TipoCorso tipoDiCorso = TipoCorso.ottieniTipoDiCorsoFormattato(risultato.getString("TipoDiCorso"));
+	    		
+	    		LocalDate dataInizio = risultato.getDate("DataInizio").toLocalDate();
+
+	    		FrequenzaSessione frequenzaSessione = FrequenzaSessione.ottieniFrequenzaSessioneFormattata(risultato.getString("Freqsessione"));
+	    		
+	    		LocalDate dataFine = risultato.getDate("DataFine").toLocalDate();
+	    		
 	    		// Crea un nuovo oggetto Corso con i dati estratti
-	            Corso tempCorso = new Corso(
-	            		risultato.getInt("IDCorso"),
-	            		Corso.TipoCorso.ottieniTipoDaDescrizione(risultato.getString("TipoDiCorso")), 
-	            		risultato.getDate("DataInizio").toLocalDate(),
-	            		Corso.FrequenzaSessione.ottieniTipoDaDescrizione(risultato.getString("Freqsessione")),
-	            		risultato.getDate("DataFine").toLocalDate(),
-	            		chefAssociato);
+	            Corso tempCorso = new Corso(idCorso,tipoDiCorso,dataInizio,frequenzaSessione,dataFine,chefAssociato);
 	            
 	            // Aggiungi l'oggetto Corso all arrayList
 	            corsi.add(tempCorso);
 	    	}
 	    } catch (SQLException e) {
-	        //throw new DBExceptionRisultatoIndefinito();
-	    	e.printStackTrace();
+	        throw new DBExceptionRisultatoIndefinito();
 	    }
 	    
 		return corsi;
