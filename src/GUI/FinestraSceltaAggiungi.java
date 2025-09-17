@@ -164,7 +164,7 @@ public class FinestraSceltaAggiungi extends FinestraTemplate {
 		
 		btnAggiungiRicetteSessionePratica.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//		    	controller.showFinestraSelezionaCorso("ricetta");
+		    	controller.showFinestraSelezionaCorso("ricetta");
 			}
 		});
 		

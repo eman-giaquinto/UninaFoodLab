@@ -151,12 +151,10 @@ public class FinestraSelezionaCorso extends FinestraTemplate {
 		                    controller.showFinestraAggiungiSessioneOnline();
 	            			break;
 	            			case "ricetta":
-//			                controller.showFinestraSelezionaSessionePratica();
+			                controller.showFinestraSelezionaSessionePratica();
 	            			break;
                         }
-                        
-
-
+                       
                     }
                 }
             }
@@ -322,6 +320,7 @@ public class FinestraSelezionaCorso extends FinestraTemplate {
 			svuotaTabella();
 			if(filtro.equals("Tutti")) {
 				messaggioWarningPopUp(e.getMessaggioWarningSchermo());
+        		controller.backToFinestraSceltaAggiungi(FinestraSelezionaCorso.this);
 			}
 			else
 			{

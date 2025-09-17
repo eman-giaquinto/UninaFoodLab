@@ -43,10 +43,16 @@ public class Ricetta {
 	        
 	}
 	
+	// Costruttore per il recupero delle ricette associate ad una sessione pratica
 	public Ricetta(String nome, String descrizione, GradoDifficoltà gradoDifficoltà) {
 		this.nome=nome;
 		this.descrizione=descrizione;
 		this.gradoDifficoltà=gradoDifficoltà;
+	}
+	
+	// Costruttore per l' associazione di una ricetta ad una sessione pratica
+	public Ricetta(String nome) {
+		this.nome=nome;
 	}
 
 	public String getNome() {

@@ -31,6 +31,7 @@ import DatabaseException.DBExceptionDataSessioneOnlineDiversaSettimanale;
 import DatabaseException.DBExceptionDataSessionePraticaDiversaMensile;
 import DatabaseException.DBExceptionOperazioneQueryDML;
 import DatabaseException.DBExceptionPasswordErrata;
+import DatabaseException.DBExceptionRicettaGiàAssociata;
 import DatabaseException.DBExceptionRicetteNonTrovate;
 import DatabaseException.DBExceptionRisultatoIndefinito;
 import DatabaseException.DBExceptionSessioneOnlineDuplicata;
@@ -40,6 +41,7 @@ import DatabaseException.DBExceptionSessioniOnlineNonTrovate;
 import DatabaseException.DBExceptionSessioniPraticheNonTrovate;
 import DatabaseException.DBExceptionUsernameNonTrovato;
 import GUI.FinestraAggiungiCorso;
+import GUI.FinestraAggiungiRicettaSessionePratica;
 import GUI.FinestraAggiungiSessioneOnline;
 import GUI.FinestraAggiungiSessionePratica;
 import GUI.FinestraLogin;
@@ -47,6 +49,7 @@ import GUI.FinestraMenuPrincipale;
 import GUI.FinestraSceltaAggiungi;
 import GUI.FinestraSceltaTipoDiSessione;
 import GUI.FinestraSelezionaCorso;
+import GUI.FinestraSelezionaSessionePratica;
 import GUI.FinestraVisualizzaCorsi;
 import GUI.FinestraVisualizzaRicetteSessionePratica;
 import GUI.FinestraVisualizzaSessioniOnline;
@@ -74,6 +77,8 @@ public class Controller {
 	private FinestraSelezionaCorso finestraSelezionaCorso;
 	private FinestraAggiungiSessionePratica finestraAggiungiSessionePratica;
 	private FinestraAggiungiSessioneOnline finestraAggiungiSessioneOnline;
+	private FinestraSelezionaSessionePratica finestraSelezionaSessionePratica;
+	private FinestraAggiungiRicettaSessionePratica finestraAggiungiRicettaSessionePratica;
 
 
 
@@ -99,6 +104,8 @@ public class Controller {
 	//Oggetti
     private DateTimeFormatter formatoDataItaliana = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private DateTimeFormatter formatoOraItaliana = DateTimeFormatter.ofPattern("HH:mm");
+    private ArrayList<String> listaRicette  = new ArrayList<String>();
+
 
 
 
@@ -129,8 +136,8 @@ public class Controller {
 		finestraSelezionaCorso = new FinestraSelezionaCorso(this);
 		finestraAggiungiSessionePratica = new FinestraAggiungiSessionePratica(this);
 		finestraAggiungiSessioneOnline = new FinestraAggiungiSessioneOnline(this);
-
-
+		finestraSelezionaSessionePratica = new FinestraSelezionaSessionePratica(this);
+		finestraAggiungiRicettaSessionePratica = new FinestraAggiungiRicettaSessionePratica(this);
 
 
 
@@ -415,9 +422,9 @@ public class Controller {
 		}
 		
 		finestraSelezionaCorso.setFiltriTipiDiCorso();
-		finestraSelezionaCorso.richiestaSelezionaCorso("Tutti");
 		finestraSelezionaCorso.setVisible(true);
 		finestraSceltaAggiungi.setVisible(false);
+		finestraSelezionaCorso.richiestaSelezionaCorso("Tutti");
 	}
 	
 	public void richiestaSelezionaCorsoAggiungi(String filtroScelto) throws DBExceptionRisultatoIndefinito,
@@ -484,6 +491,7 @@ public class Controller {
 				numeroAdesioniInserito, dataSessioneInserita, orarioInizioInserito, orarioFineInserito, corsoScelto);
 				
 		sessionePraticaDAO.creaSessionePratica(sessionePraticaTemp);
+		
 	}
 	
 	public void backToSelezionaCorso(JFrame finestra) {
@@ -524,5 +532,67 @@ public class Controller {
 		sessioneOnlineDAO.creaSessioneOnline(sessioneOnlineDaAggiungere);
 	}
 	
+	/* AGGIUNGI RICETTA ALLA SESSIONE PRATICA PARTE AGGIUNTIVA */
+	public void showFinestraSelezionaSessionePratica() {
+		finestraSelezionaSessionePratica.setVisible(true);
+		finestraSelezionaCorso.setVisible(false);
+		finestraSelezionaSessionePratica.richiestaVisualizzaSessioniPratiche();	
+	}
+	
+	public void richiestaSelezionaSessionePraticaSchermo() throws DBExceptionRisultatoIndefinito, DBExceptionSessioniPraticheNonTrovate{
+	    ArrayList<SessionePratica> sessioniPraticheVisualizzate = sessionePraticaDAO.ottieniSessioniPratiche(corsoScelto);
+	    corsoScelto.setSessioniPratiche(sessioniPraticheVisualizzate);
+		// Se non vengono rilanciate eccezioni allora procedo a stampare a schermo le sessioni pratiche ricavate
+		stampaTabellaSelezionaSessioniPratiche();
+	}
+	
+	private void stampaTabellaSelezionaSessioniPratiche() {
+		finestraSelezionaSessionePratica.svuotaTabella();
+		
+		int numeroSessionePratica=1;
+		// Per ogni sessione pratica aggiungo una tupla alla tabella visualizzata a schermo 
+		for (SessionePratica sessionepratica : corsoScelto.getSessioniPratiche()) {
+			finestraSelezionaSessionePratica.aggiungiTupla(
+					sessionepratica.getIdSessionePratica(),
+					numeroSessionePratica++,
+	                sessionepratica.getNumeroAdesioni(),
+	                sessionepratica.getDataSessione().format(formatoDataItaliana),
+	                sessionepratica.getOrarioInizio().format(formatoOraItaliana),
+	                sessionepratica.getOrarioFine().format(formatoOraItaliana)
+	                );
+		}
+	}
+	
+	public void impostaSessionePraticaSelezionata(int idSessionePraticaRichiesta) {
+		sessionePraticaScelta.setIdSessionePratica(idSessionePraticaRichiesta);
+	}
+	
+	public void showFinestraAggiungiRicettaSessionePratica () {
+		finestraAggiungiRicettaSessionePratica.setVisible(true);
+		finestraSelezionaSessionePratica.setVisible(false);
+		finestraAggiungiRicettaSessionePratica.setListaRicette();
+		finestraAggiungiRicettaSessionePratica.setCampoRicetta();
+	}
+	
+	public ArrayList<String> impostaElencoRicette() throws DBExceptionRisultatoIndefinito {
+		// Se è la prima volta che recupero tutte le ricette dal DB l' array sarà vuoto
+		if(listaRicette.isEmpty()) {
+			listaRicette=ricettaDAO.ottieniTutteLeRicette();
+		}
+		return listaRicette;
+	}
+	
+	public void backToFinestraSelezionaSessionePratica() {
+		finestraSelezionaSessionePratica.setVisible(true);
+		finestraAggiungiRicettaSessionePratica.setVisible(false);
+	}
+	
+	public void aggiungiRicettaSessionePratica(String nomeRicettaRicavata) throws DBExceptionOperazioneQueryDML, 
+	DBExceptionRicettaGiàAssociata {
+		
+		Ricetta tempRicetta = new Ricetta(nomeRicettaRicavata);
+		
+		ricettaDAO.aggiungiRicettaSessionePraticaAssociata(sessionePraticaScelta, tempRicetta);
+	}
 	
 }
