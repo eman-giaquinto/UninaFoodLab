@@ -56,7 +56,7 @@ public class ImplementazioneSessioneOnlineDAO implements SessioneOnlineDAO {
 	        // Itera su tutte le righe restituite dalla query
 	        while (comunicazioneDB.prossimaTupla()) {
 	            
-	        	int idSessioneOnline = risultato.getInt("idsessionepratica");
+	        	int idSessioneOnline = risultato.getInt("idsessioneonline");
 	        	
 	        	Piattaforma piattaforma = Piattaforma.ottieniPiattaformaFormattata(risultato.getString("piattaforma"));
 	        	

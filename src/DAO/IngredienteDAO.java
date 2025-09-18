@@ -1,7 +1,13 @@
 package DAO;
 
+import java.util.ArrayList;
+
+import DTO.Ingrediente;
+import DTO.Ricetta;
+import DatabaseException.DBExceptionRisultatoIndefinito;
+
 public interface IngredienteDAO {
-	
-	//aggiungere la logica per il report mensile
+	/* LOGICA TASTO VISUALIZZA */
+	ArrayList<Ingrediente> ottieniIngredientiRicetta(Ricetta ricettaDiRiferimento) throws DBExceptionRisultatoIndefinito;
 
 }

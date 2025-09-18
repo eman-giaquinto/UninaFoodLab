@@ -116,7 +116,7 @@ public class ImplementazioneSessionePraticaDAO implements SessionePraticaDAO{
 				}
 			
 			throw new DBExceptionOperazioneQueryDML();
-			}		
+		}		
 	}
 	 
 }

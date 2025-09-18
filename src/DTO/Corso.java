@@ -68,7 +68,7 @@ public class Corso {
 		// Descrizione ottenuta dall' enum non modificabile
         private final String descrizione;
 
-        // Costruttore per la creazione di un oggetto di tipo TipoCorso
+        // Costruttore per la creazione di un oggetto di tipo FrequenzaSessione
         FrequenzaSessione(String descrizione) {
             this.descrizione = descrizione;
         }
@@ -175,6 +175,7 @@ public class Corso {
 		this.sessioniOnline = sessioniOnline;
 	}
 
+	// Metodo utilizzato per il filtraggio dei corsi e per aggiungere un corso
 	public static String[] ottieniDescrizioniTipiDiCorsi(String aggiungiFiltro) {
         TipoCorso[] tuttiITipi = TipoCorso.values();
         String[] descrizioniTipiDiCorso;
@@ -203,18 +204,19 @@ public class Corso {
         return descrizioniTipiDiCorso;
     }
 	
+	// Metodo utilizzato per l' aggiunta di un corso
 	public static String[] ottieniDescrizioniFrequenzeSessioni() {
 		// Ottengo i valori dell' enum 
         FrequenzaSessione[] tuttiITipi = FrequenzaSessione.values();
         
         String[] descrizioniFrequenzeSessioni;
      
-        /* Creo un array String e inserisco i le descrizioni dei valori recuperati prima*/
+        /* Creo un array String e inserisco le descrizioni dei valori recuperati prima*/
         descrizioniFrequenzeSessioni = new String[tuttiITipi.length];
             
-            for (int i = 0; i < tuttiITipi.length; i++) {
-            	descrizioniFrequenzeSessioni[i] = tuttiITipi[i].getDescrizione();
-            }
+        for (int i = 0; i < tuttiITipi.length; i++) {
+        	descrizioniFrequenzeSessioni[i] = tuttiITipi[i].getDescrizione();
+        }
             
         return descrizioniFrequenzeSessioni;
     }

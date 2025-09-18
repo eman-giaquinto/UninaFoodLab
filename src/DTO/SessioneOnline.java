@@ -30,7 +30,7 @@ public class SessioneOnline {
 		// Descrizione ottenuta dall' enum non modificabile
         private final String descrizione;
         
-        // Costruttore per la creazione di un oggetto di tipo TipoCorso
+        // Costruttore per la creazione di un oggetto di tipo Piattaforma
         Piattaforma(String descrizione) {
             this.descrizione = descrizione;
         }
@@ -129,6 +129,7 @@ public class SessioneOnline {
 		this.corsoDiRiferimento = corsoDiRiferimento;
 	}
 	
+	// Metodo richiamato dalla finestra aggiungi sessione online
 	public static String[] ottieniDescrizioniPiattaforme() {
 		Piattaforma[] tuttiITipi = Piattaforma.values();
         

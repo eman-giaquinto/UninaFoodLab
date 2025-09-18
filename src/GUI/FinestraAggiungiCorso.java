@@ -76,6 +76,7 @@ public class FinestraAggiungiCorso extends FinestraTemplate {
 
    
 	public FinestraAggiungiCorso(Controller c) {
+		
 		controller = c;
 
 		setTitle("UninaFoodLab - Aggiungi un corso");

@@ -1,5 +1,7 @@
 package Database;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,14 +21,16 @@ public class ComunicazioneDB {
 	private Statement statement = null;
 	private int esitoPositivo;
 	
-	public ComunicazioneDB() throws DBExceptionConnessioneNonRiuscita, DBExceptionCreazioneStatementFallita {
+	public ComunicazioneDB() throws DBExceptionConnessioneNonRiuscita, DBExceptionCreazioneStatementFallita,
+	FileNotFoundException,IOException,SQLException,ClassNotFoundException{
 		// Istanzio il singleton della connessione al DB oppure lo recupero
 		connessioneDB = ConnessioneDB.getConnectionDB();
 		
 		creaConnessione();
 	}
 	
-    protected Connection creaConnessione() throws DBExceptionConnessioneNonRiuscita, DBExceptionCreazioneStatementFallita{
+    protected Connection creaConnessione() throws DBExceptionConnessioneNonRiuscita, DBExceptionCreazioneStatementFallita,
+    FileNotFoundException,IOException,SQLException,ClassNotFoundException{
     	// Creo la connessione per la prima volta se non c'è mai stata o è stata chiusa
     	connessioneSQL = connessioneDB.getConnection();
 
@@ -73,7 +77,7 @@ public class ComunicazioneDB {
 	
 	}
 	
-	public void terminaConnessione() throws DBExceptionChiusuraConnessioneNonRiuscita{
+	public void terminaConnessioneDB() throws DBExceptionChiusuraConnessioneNonRiuscita{
 		/* Chiudo tutte le connessioni aperte con il database*/
 		try {
 			risultato.close();

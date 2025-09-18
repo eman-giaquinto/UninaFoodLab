@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import Controller.Controller;
+import DatabaseException.DBExceptionConnessioneNonRiuscita;
 import DatabaseException.DBExceptionPasswordErrata;
 import DatabaseException.DBExceptionRisultatoIndefinito;
 import DatabaseException.DBExceptionUsernameNonTrovato;
@@ -200,6 +201,8 @@ public class FinestraLogin extends FinestraTemplate {
 					messaggioErrorPopUp(err.getmessaggioErrorSchermo());
 				} catch (DBExceptionRisultatoIndefinito err) {
 					messaggioErrorPopUp(err.getMessaggioErrorSchermo());
+				} catch (DBExceptionConnessioneNonRiuscita err) {
+					messaggioErrorPopUp(err.getMessaggioErroreSchermo());
 				}
 				
 			}

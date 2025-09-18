@@ -18,6 +18,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
@@ -127,7 +128,6 @@ public class FinestraSelezionaCorso extends FinestraTemplate {
             };
             
         tableCorsi = new JTable(modelloTabella);
-        tableCorsi.setToolTipText("Doppio click per visualizzare le sessioni del corso");
 
         tableCorsi.addMouseListener(new MouseAdapter() {
         	@Override
@@ -339,6 +339,30 @@ public class FinestraSelezionaCorso extends FinestraTemplate {
 	
 	public void setModalitàAccesso(String opzioneAccesso) {
 	    modeAccesso=opzioneAccesso;
+
+	    reimpostaVisualizzazione();
+	    
+	    setToolTipTable();
+	}
+	
+	private void reimpostaVisualizzazione() {
+	    // Metodo per reimpostare la visualizzazione sulla prima riga della tabella
+	    JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
+	    verticalScrollBar.setValue(verticalScrollBar.getMinimum());	
+	}
+	
+	private void setToolTipTable() {
+		switch(modeAccesso){
+		case "pratica":
+	    tableCorsi.setToolTipText("Doppio click per aggiungere la sessione pratica al corso");
+		break;
+		case "online":
+		tableCorsi.setToolTipText("Doppio click per aggiungere la sessione online al corso");
+		break;
+		case "ricetta":
+		tableCorsi.setToolTipText("Doppio click per selezionare la sessione pratica del corso");
+		break;
+    }
 	}
 
 }

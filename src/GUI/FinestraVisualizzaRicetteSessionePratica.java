@@ -22,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import Controller.Controller;
-import DatabaseException.DBExceptionRicetteNonTrovate;
+import DatabaseException.DBExceptionRicetteSessionePraticaNonTrovate;
 import DatabaseException.DBExceptionRisultatoIndefinito;
 
 public class FinestraVisualizzaRicetteSessionePratica extends FinestraTemplate {
@@ -143,23 +143,45 @@ public class FinestraVisualizzaRicetteSessionePratica extends FinestraTemplate {
         
     	@Override
     	public String getToolTipText(java.awt.event.MouseEvent e) {
-        java.awt.Point p = e.getPoint();
-        // Individuo la posizione del cursore
-        int riga = rowAtPoint(p);
-        int colonna = columnAtPoint(p);
-
-        // Ci assicuriamo che il cursore sia sulla colonna della descrizione della ricetta
-        if (riga != -1 && colonna != -1 && colonna == 2) {
-        	String testoOriginale = getValueAt(riga, colonna).toString();
-            
-            return wrapTextByLength(testoOriginale, 40);
-        }
-        return null;
+	        java.awt.Point p = e.getPoint();
+	        // Individuo la posizione del cursore
+	        int riga = rowAtPoint(p);
+	        int colonna = columnAtPoint(p);
+	
+	        // Ci assicuriamo che il cursore sia sulla colonna della descrizione della ricetta
+	        if (riga != -1 && colonna != -1 && colonna == 2) {
+	        	String testoOriginale = getValueAt(riga, colonna).toString();
+	            
+	            return wrapTextByLength(testoOriginale, 40);
+	        }
+	        else
+	        {
+	            // Aggiungo tooltip suggerimento alla tabella
+	        	return "Doppio click per visualizzare gli ingredienti della ricetta";
+	        }
         
         }
     	
         };
-
+        
+        tableRicette.addMouseListener(new MouseAdapter() {
+        	@Override
+            public void mouseClicked(MouseEvent e) {
+                // Controlla se l'utente ha fatto un doppio click
+                if (e.getClickCount() == 2) {
+                    
+                    int rigaSelezionata = tableRicette.getSelectedRow();
+                    
+                    if (rigaSelezionata >= 0) {
+                        
+                        String nomeRicetta = (String) tableRicette.getModel().getValueAt(rigaSelezionata, 1);
+                                    
+                        controller.richiestaMostraIngredientiRicettaSelezionata(nomeRicetta);
+                        controller.showFinestraVisualizzaIngredientiRicetta();
+                    }
+                }
+            }
+        });
         
         tableRicette.getColumnModel().getColumn(0).setPreferredWidth(25);
         tableRicette.getColumnModel().getColumn(1).setPreferredWidth(150);
@@ -241,7 +263,7 @@ public class FinestraVisualizzaRicetteSessionePratica extends FinestraTemplate {
     public void richiestaVisualizzaRicette() {
     	try {
 			controller.richiestaVisualizzaRicetteSchermo();
-		} catch (DBExceptionRicetteNonTrovate e) {
+		} catch (DBExceptionRicetteSessionePraticaNonTrovate e) {
 			svuotaTabella();
 			messaggioWarningPopUp(e.getMessaggioWarningSchermo());	
             controller.backToFinestraVisualizzaSessioniPratiche(); 

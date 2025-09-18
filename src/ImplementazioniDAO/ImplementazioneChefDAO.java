@@ -27,7 +27,10 @@ public class ImplementazioneChefDAO implements ChefDAO {
 		String usernameChef = chefDaVerificare.getUsername();
 		
 		String passwordChef = chefDaVerificare.getPassword();
-
+		
+		/* Verifico la presenza dell' username inserito, 
+		   se esiste controllo la correttezza della password inserita */
+		
 		verificaUsername(usernameChef);
 				
 		verificaPassword(passwordChef);

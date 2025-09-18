@@ -11,7 +11,7 @@ public class Ricetta {
 	
 	private ArrayList<SessionePratica> sessioniPratiche = new ArrayList<>();
 	
-	//private ArrayList<Ingrediente> ingredienti = new ArrayList<>();
+	private ArrayList<Ingrediente> ingredienti = new ArrayList<>();
 	
 	// Enum per il grado di difficoltà delle ricette
 	public enum GradoDifficoltà {
@@ -43,13 +43,21 @@ public class Ricetta {
 	        
 	}
 	
-	// Costruttore per il recupero delle ricette associate ad una sessione pratica
+	// Costruttore per il recupero delle ricette
 	public Ricetta(String nome, String descrizione, GradoDifficoltà gradoDifficoltà) {
 		this.nome=nome;
 		this.descrizione=descrizione;
 		this.gradoDifficoltà=gradoDifficoltà;
 	}
 	
+	// Costruttore per il recupero delle ricette e degli ingredienti
+	public Ricetta(String nome, String descrizione, GradoDifficoltà gradoDifficoltà,ArrayList<Ingrediente> ingredienti) {
+		this.nome=nome;
+		this.descrizione=descrizione;
+		this.gradoDifficoltà=gradoDifficoltà;
+		this.ingredienti=ingredienti;
+	}
+		
 	// Costruttore per l' associazione di una ricetta ad una sessione pratica
 	public Ricetta(String nome) {
 		this.nome=nome;
@@ -85,6 +93,14 @@ public class Ricetta {
 
 	public void setSessioniPratiche(ArrayList<SessionePratica> sessioniPratiche) {
 		this.sessioniPratiche = sessioniPratiche;
+	}
+
+	public ArrayList<Ingrediente> getIngredienti() {
+		return ingredienti;
+	}
+
+	public void setIngredienti(ArrayList<Ingrediente> ingredienti) {
+		this.ingredienti = ingredienti;
 	}
 
 		

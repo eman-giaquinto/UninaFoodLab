@@ -19,13 +19,14 @@ public class ConnessioneDB {
     private ConnessioneDB() {}
 
     public static ConnessioneDB getConnectionDB() {
+    	// Se l' istanza di connessione al DB non è stata mai fatta, la creo per la prima volta
         if (istanzaConnessioneDB == null) {
         	istanzaConnessioneDB = new ConnessioneDB();
         }
         return istanzaConnessioneDB;
     }
     
-    public Connection getConnection() {
+    public Connection getConnection() throws FileNotFoundException,IOException,SQLException,ClassNotFoundException {
     	
         String urlDB = null;
         String userDB = null; 
@@ -52,14 +53,15 @@ public class ConnessioneDB {
                 connessione_SQL = DriverManager.getConnection(urlDB, userDB, passwordDB);
             	}
             
-        	} catch (FileNotFoundException e) {
-        		messaggioErrore = "File di configurazione non trovato";
-	        } catch (IOException e) {
-	        	messaggioErrore = "Errore durante la lettura del file";
-		    } catch (SQLException e) {
-		    	messaggioErrore = "Errore nella comunicazione con il database";
-		    } catch (ClassNotFoundException e) {
-		    	messaggioErrore = "Driver connessione al database non trovato";
+            /* Rilancio eccezioni alla finestra di login*/
+        	} catch (FileNotFoundException err) {
+        		throw err;
+	        } catch (IOException err) {
+        		throw err;
+		    } catch (SQLException err) {
+        		throw err;
+		    } catch (ClassNotFoundException err) {
+        		throw err;
 	        }
 
         return connessione_SQL;

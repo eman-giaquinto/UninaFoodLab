@@ -1,6 +1,6 @@
 package DatabaseException;
 
-public class DBExceptionRicetteNonTrovate extends Exception {
+public class DBExceptionRicetteSessionePraticaNonTrovate extends Exception {
 	private String messaggioWarningSchermo = "Non ci sono ricette associate alla sessione\n"
 										   + "pratica selezionata";
 

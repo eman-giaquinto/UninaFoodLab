@@ -124,7 +124,7 @@ public class FinestraSelezionaSessionePratica extends FinestraTemplate {
             };
             
         tableSessioniPratiche = new JTable(modelloTabellaSessionePratica);
-        tableSessioniPratiche.setToolTipText("Doppio click per selezionare la sessione pratica");
+        tableSessioniPratiche.setToolTipText("Doppio click per aggiungere la ricetta alla sessione pratica");
 
         tableSessioniPratiche.addMouseListener(new MouseAdapter() {
         	@Override

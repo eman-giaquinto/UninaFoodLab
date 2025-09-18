@@ -1,14 +1,19 @@
 package Controller;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import DAO.ChefDAO;
 import DAO.CorsoDAO;
+import DAO.IngredienteDAO;
 import DAO.RicettaDAO;
 import DAO.SessioneOnlineDAO;
 import DAO.SessionePraticaDAO;
@@ -16,11 +21,13 @@ import DTO.Chef;
 import DTO.Corso;
 import DTO.Corso.FrequenzaSessione;
 import DTO.Corso.TipoCorso;
+import DTO.Ingrediente;
 import DTO.Ricetta;
 import DTO.SessioneOnline;
 import DTO.SessioneOnline.Piattaforma;
 import DTO.SessionePratica;
 import Database.ComunicazioneDB;
+import DatabaseException.DBExceptionChiusuraConnessioneNonRiuscita;
 import DatabaseException.DBExceptionConnessioneNonRiuscita;
 import DatabaseException.DBExceptionCorsiNonTrovati;
 import DatabaseException.DBExceptionCreazioneStatementFallita;
@@ -32,7 +39,7 @@ import DatabaseException.DBExceptionDataSessionePraticaDiversaMensile;
 import DatabaseException.DBExceptionOperazioneQueryDML;
 import DatabaseException.DBExceptionPasswordErrata;
 import DatabaseException.DBExceptionRicettaGiàAssociata;
-import DatabaseException.DBExceptionRicetteNonTrovate;
+import DatabaseException.DBExceptionRicetteSessionePraticaNonTrovate;
 import DatabaseException.DBExceptionRisultatoIndefinito;
 import DatabaseException.DBExceptionSessioneOnlineDuplicata;
 import DatabaseException.DBExceptionSessioneOnlineLinkDuplicato;
@@ -51,11 +58,13 @@ import GUI.FinestraSceltaTipoDiSessione;
 import GUI.FinestraSelezionaCorso;
 import GUI.FinestraSelezionaSessionePratica;
 import GUI.FinestraVisualizzaCorsi;
+import GUI.FinestraVisualizzaIngredientiRicetta;
 import GUI.FinestraVisualizzaRicetteSessionePratica;
 import GUI.FinestraVisualizzaSessioniOnline;
 import GUI.FinestraVisualizzaSessioniPratiche;
 import ImplementazioniDAO.ImplementazioneChefDAO;
 import ImplementazioniDAO.ImplementazioneCorsoDAO;
+import ImplementazioniDAO.ImplementazioneIngredienteDAO;
 import ImplementazioniDAO.ImplementazioneRicettaDAO;
 import ImplementazioniDAO.ImplementazioneSessioneOnlineDAO;
 import ImplementazioniDAO.ImplementazioneSessionePraticaDAO;
@@ -66,13 +75,17 @@ public class Controller {
 	
 	// Finestre
 	private FinestraLogin finestraLogin;
+	
 	private FinestraMenuPrincipale finestraMenuPrincipale;
+	
 	private FinestraVisualizzaCorsi finestraVisualizzaCorsi;
 	private FinestraSceltaTipoDiSessione finestraSceltaTipoDiSessione;
 	private FinestraVisualizzaSessioniPratiche finestraVisualizzaSessioniPratiche;
 	private FinestraVisualizzaRicetteSessionePratica finestraVisualizzaRicetteSessionePratica;
-	private FinestraSceltaAggiungi finestraSceltaAggiungi;
+	private FinestraVisualizzaIngredientiRicetta finestraVisualizzaIngredientiRicetta;
 	private FinestraVisualizzaSessioniOnline finestraVisualizzaSessioniOnline;
+	
+	private FinestraSceltaAggiungi finestraSceltaAggiungi;
 	private FinestraAggiungiCorso finestraAggiungiCorso;
 	private FinestraSelezionaCorso finestraSelezionaCorso;
 	private FinestraAggiungiSessionePratica finestraAggiungiSessionePratica;
@@ -90,6 +103,7 @@ public class Controller {
     private SessionePraticaDAO sessionePraticaDAO;
     private RicettaDAO ricettaDAO;
     private SessioneOnlineDAO sessioneOnlineDAO;
+    private IngredienteDAO ingredienteDAO;
 
 
 
@@ -98,6 +112,8 @@ public class Controller {
 	private Chef chefAutenticato;
 	private Corso corsoScelto;
 	private SessionePratica sessionePraticaScelta;
+	private Ricetta ricettaSelezionata;
+
 
 
 	
@@ -113,12 +129,7 @@ public class Controller {
 
 
 	public static void main(String[] args) {
-		Controller c = new Controller();
-		
-		// aggiungere un metodo per far si che la java swing giri su un thread 
-		
-		// aggiungere un metodo per chiudere la connessione al db
-		
+		Controller c = new Controller();   
 	}
 	
 	public Controller() {
@@ -130,8 +141,9 @@ public class Controller {
 		finestraSceltaTipoDiSessione = new FinestraSceltaTipoDiSessione(this);
 		finestraVisualizzaSessioniPratiche = new FinestraVisualizzaSessioniPratiche(this);
 		finestraVisualizzaRicetteSessionePratica = new FinestraVisualizzaRicetteSessionePratica(this);
-		finestraSceltaAggiungi = new FinestraSceltaAggiungi(this);
+		finestraVisualizzaIngredientiRicetta = new FinestraVisualizzaIngredientiRicetta(this);
 		finestraVisualizzaSessioniOnline = new FinestraVisualizzaSessioniOnline(this);
+		finestraSceltaAggiungi = new FinestraSceltaAggiungi(this);
 		finestraAggiungiCorso = new FinestraAggiungiCorso(this);
 		finestraSelezionaCorso = new FinestraSelezionaCorso(this);
 		finestraAggiungiSessionePratica = new FinestraAggiungiSessionePratica(this);
@@ -141,7 +153,7 @@ public class Controller {
 
 
 
-
+		
 		finestraLogin.setVisible(true);
 		
 		// Apro la comunicazione con il database
@@ -151,12 +163,21 @@ public class Controller {
 			finestraLogin.messaggioErrorPopUp(e.getMessaggioErroreSchermo());
 		} catch (DBExceptionConnessioneNonRiuscita e) {
 			finestraLogin.messaggioErrorPopUp(e.getMessaggioErroreSchermo());
-		}
+    	} catch (FileNotFoundException e) {
+			finestraLogin.messaggioErrorPopUp("File di configurazione DB non trovato");
+        } catch (IOException e) {
+			finestraLogin.messaggioErrorPopUp("Errore durante la lettura del file");
+	    } catch (SQLException e) {
+			finestraLogin.messaggioErrorPopUp("Errore nella comunicazione con il database");
+	    } catch (ClassNotFoundException e) {
+			finestraLogin.messaggioErrorPopUp("Driver connessione al database non trovato");
+        }
 		
 		// Inizializzo i DTO		
 		chefAutenticato = new Chef(null,null,null,null);
 		corsoScelto = new Corso(0,null,null,null,null,null);
 		sessionePraticaScelta = new SessionePratica(0,0,null,null,null,null);
+		ricettaSelezionata = new Ricetta(null);
 		
 		// Inizializzo i DAO
 		chefDAO = new ImplementazioneChefDAO(comunicazioneDB);
@@ -164,13 +185,20 @@ public class Controller {
         sessionePraticaDAO = new ImplementazioneSessionePraticaDAO(comunicazioneDB);
         ricettaDAO = new ImplementazioneRicettaDAO(comunicazioneDB);
         sessioneOnlineDAO = new ImplementazioneSessioneOnlineDAO(comunicazioneDB);
+        ingredienteDAO = new ImplementazioneIngredienteDAO(comunicazioneDB);
 
+ 
 
-
+        
 	}
 	
 	public void accesso(String username, String password) throws DBExceptionRisultatoIndefinito,
-					DBExceptionUsernameNonTrovato, DBExceptionPasswordErrata {
+					DBExceptionUsernameNonTrovato, DBExceptionPasswordErrata,DBExceptionConnessioneNonRiuscita {
+		
+		// Nel caso in cui si prova a fare l' accesso nonostante la connessione non stabilita
+		if (comunicazioneDB==null) {
+			throw new DBExceptionConnessioneNonRiuscita();
+		}
 		
 		Chef chefDaVerificare = new Chef(username,password);
 		
@@ -188,6 +216,15 @@ public class Controller {
 	public void gotoMenuPrincipale(JFrame finestra) {
 		finestraMenuPrincipale.setVisible(true);
 		finestra.setVisible(false);
+		
+        // Metodo che rileva la chisura dell' applicazione dopo il login
+	    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+	    try {
+			comunicazioneDB.terminaConnessioneDB();
+		} catch (DBExceptionChiusuraConnessioneNonRiuscita e) {
+			finestraMenuPrincipale.messaggioErrorPopUp(e.getMessaggioErroreSchermo());
+		}
+	    }));
 	}
 	
 	/* LOGICA TASTO VISUALIZZA */
@@ -296,7 +333,7 @@ public class Controller {
 		finestraVisualizzaRicetteSessionePratica.richiestaVisualizzaRicette();
 	}
 	
-	public void richiestaVisualizzaRicetteSchermo() throws DBExceptionRisultatoIndefinito, DBExceptionRicetteNonTrovate{
+	public void richiestaVisualizzaRicetteSchermo() throws DBExceptionRisultatoIndefinito, DBExceptionRicetteSessionePraticaNonTrovate{
 		
 		ArrayList<Ricetta> ricetteSessionePraticaVisualizzate; 
 		ricetteSessionePraticaVisualizzate = ricettaDAO.ottieniRicetteSessionePratica(sessionePraticaScelta);
@@ -323,6 +360,35 @@ public class Controller {
 	public void backToFinestraVisualizzaSessioniPratiche() {
 		finestraVisualizzaSessioniPratiche.setVisible(true);
 		finestraVisualizzaRicetteSessionePratica.setVisible(false);
+	}
+	
+	/* VISUALIZZA INGREDIENTI DELLA RICETTA SCELTA */
+
+	public void richiestaMostraIngredientiRicettaSelezionata(String nomeRicetta) {
+		ricettaSelezionata.setNome(nomeRicetta);
+	}
+	
+	public void showFinestraVisualizzaIngredientiRicetta() {
+		finestraVisualizzaIngredientiRicetta.setVisible(true);
+		finestraVisualizzaIngredientiRicetta.richiestaVisualizzaIngredienti();
+	}
+	
+	public void richiestaVisualizzaIngredientiSchermo() throws DBExceptionRisultatoIndefinito{
+		ArrayList<Ingrediente> ingredientiVisualizzati = ingredienteDAO.ottieniIngredientiRicetta(ricettaSelezionata);
+		ricettaSelezionata.setIngredienti(ingredientiVisualizzati);
+	}
+
+	public ArrayList<String> impostaIngredientiRicetta() {
+		
+		ArrayList<Ingrediente> ingredientiRicavati = ricettaSelezionata.getIngredienti();
+		
+		ArrayList<String> ingredientiVisualizzati = new ArrayList<>();
+
+		for (Ingrediente ingrediente : ingredientiRicavati) {
+			ingredientiVisualizzati.add(ingrediente.getNome());
+		}
+		
+	    return ingredientiVisualizzati;
 	}
 	
 	/* VISUALIZZA SESSIONI ONLINE  */
@@ -594,5 +660,8 @@ public class Controller {
 		
 		ricettaDAO.aggiungiRicettaSessionePraticaAssociata(sessionePraticaScelta, tempRicetta);
 	}
+	
+	/* LOGICA TASTO REPORT MENSILE */
+
 	
 }

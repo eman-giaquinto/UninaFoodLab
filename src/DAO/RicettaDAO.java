@@ -6,13 +6,13 @@ import DTO.Ricetta;
 import DTO.SessionePratica;
 import DatabaseException.DBExceptionOperazioneQueryDML;
 import DatabaseException.DBExceptionRicettaGiàAssociata;
-import DatabaseException.DBExceptionRicetteNonTrovate;
+import DatabaseException.DBExceptionRicetteSessionePraticaNonTrovate;
 import DatabaseException.DBExceptionRisultatoIndefinito;
 
 public interface RicettaDAO {
 	/* LOGICA TASTO VISUALIZZA */
 	ArrayList<Ricetta> ottieniRicetteSessionePratica(SessionePratica sessionePraticaSelezionata) 
-	throws DBExceptionRisultatoIndefinito,DBExceptionRicetteNonTrovate;
+	throws DBExceptionRisultatoIndefinito,DBExceptionRicetteSessionePraticaNonTrovate;
 
 	/* LOGICA TASTO AGGIUNGI */
 	ArrayList<String> ottieniTutteLeRicette() throws DBExceptionRisultatoIndefinito;

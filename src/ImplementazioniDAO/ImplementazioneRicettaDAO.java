@@ -11,7 +11,7 @@ import DTO.SessionePratica;
 import Database.ComunicazioneDB;
 import DatabaseException.DBExceptionOperazioneQueryDML;
 import DatabaseException.DBExceptionRicettaGiàAssociata;
-import DatabaseException.DBExceptionRicetteNonTrovate;
+import DatabaseException.DBExceptionRicetteSessionePraticaNonTrovate;
 import DatabaseException.DBExceptionRisultatoIndefinito;
 
 public class ImplementazioneRicettaDAO implements RicettaDAO{
@@ -28,7 +28,7 @@ public class ImplementazioneRicettaDAO implements RicettaDAO{
 	
 	@Override
 	public ArrayList<Ricetta> ottieniRicetteSessionePratica(SessionePratica sessionePraticaSelezionata) 
-	throws DBExceptionRisultatoIndefinito,DBExceptionRicetteNonTrovate {
+	throws DBExceptionRisultatoIndefinito,DBExceptionRicetteSessionePraticaNonTrovate {
 		
 		ArrayList<Ricetta> ricetteSessionePratica = new ArrayList<>();
 		
@@ -46,7 +46,7 @@ public class ImplementazioneRicettaDAO implements RicettaDAO{
 	        // Controlla se il ResultSet è vuoto prima di iniziare a leggere
 	        if (!risultato.isBeforeFirst()) { 
 	            // Nessuna riga trovata, la ricerca non ha prodotto risultati.
-	            throw new DBExceptionRicetteNonTrovate();
+	            throw new DBExceptionRicetteSessionePraticaNonTrovate();
 	        }
 
 	        // Itera su tutte le righe restituite dalla query
